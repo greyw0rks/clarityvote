@@ -6,11 +6,10 @@ import {
   stringUtf8CV,
   cvToValue,
 } from '@stacks/transactions';
-import { StacksMainnet, StacksTestnet, type StacksNetwork } from '@stacks/network'; // ← add type hereort { StacksMainnet, StacksTestnet } from '@stacks/network';
+import { STACKS_MAINNET, STACKS_TESTNET, type StacksNetwork } from '@stacks/network';
 
 const IS_MAINNET = process.env.NEXT_PUBLIC_NETWORK === 'mainnet';
-export const NETWORK: StacksNetwork = IS_MAINNET ? new StacksMainnet() : new StacksTestnet();
-export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+export const NETWORK: StacksNetwork = IS_MAINNET ? STACKS_MAINNET : STACKS_TESTNET;export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
 export const CONTRACT_NAME    = 'clarityvote';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
