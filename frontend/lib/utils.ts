@@ -1,0 +1,24 @@
+export function toSTX(micro: bigint): string {
+  const n = Number(micro) / 1e6;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(2)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
+  return n.toFixed(0);
+}
+
+export function pct(part: bigint, total: bigint): number {
+  if (!total || total === 0n) return 0;
+  return Math.round((Number(part) * 100) / Number(total));
+}
+
+export function trunc(a: string, n = 9): string {
+  if (!a) return '';
+  return `${a.slice(0, n)}…${a.slice(-4)}`;
+}
+
+export function t2blocks(b: number): string {
+  if (b <= 0) return 'Closed';
+  const m = b * 10;
+  if (m < 60)   return `~${m}m`;
+  if (m < 1440) return `~${Math.round(m / 60)}h`;
+  return `~${Math.round(m / 1440)}d`;
+}
