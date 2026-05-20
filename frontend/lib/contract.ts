@@ -5,9 +5,8 @@ import {
   stringAsciiCV,
   stringUtf8CV,
   cvToValue,
-  type StacksNetwork,
 } from '@stacks/transactions';
-import { StacksMainnet, StacksTestnet } from '@stacks/network';
+import { StacksMainnet, StacksTestnet, type StacksNetwork } from '@stacks/network'; // ← add type hereort { StacksMainnet, StacksTestnet } from '@stacks/network';
 
 const IS_MAINNET = process.env.NEXT_PUBLIC_NETWORK === 'mainnet';
 export const NETWORK: StacksNetwork = IS_MAINNET ? new StacksMainnet() : new StacksTestnet();
