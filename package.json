@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Run unit tests on this project.",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "test": "vitest run",
     "test:report": "vitest run -- --coverage --costs",
@@ -13,17 +13,16 @@
   "license": "ISC",
   "dependencies": {
     "@stacks/clarinet-sdk": "^3.9.0",
-    "@stacks/transactions": "^7.2.0",
+    "@stacks/transactions": "^7.4.0",
     "@types/node": "^24.4.0",
     "chokidar-cli": "^3.0.0",
     "vitest": "^4.0.7",
     "vitest-environment-clarinet": "^3.0.0"
   },
-
   "overrides": {
     "@stacks/connect-react": {
       "react": "$react",
       "react-dom": "$react-dom"
     }
-    }
+  }
 }
