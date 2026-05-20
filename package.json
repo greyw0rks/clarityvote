@@ -18,5 +18,12 @@
     "chokidar-cli": "^3.0.0",
     "vitest": "^4.0.7",
     "vitest-environment-clarinet": "^3.0.0"
-  }
+  },
+
+  "overrides": {
+    "@stacks/connect-react": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+    }
 }
