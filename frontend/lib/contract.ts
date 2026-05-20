@@ -1,5 +1,5 @@
 import {
-  callReadOnlyFunction,
+  fetchCallReadOnlyFunction,
   makeContractCall,
   uintCV,
   stringAsciiCV,
@@ -74,7 +74,7 @@ export function truncate(p: string, n = 6): string {
 
 // ── Read-only ─────────────────────────────────────────────────────────────────
 async function ro(fn: string, args: any[]) {
-  return callReadOnlyFunction({
+  return fetchCallReadOnlyFunction({
     contractAddress: CONTRACT_ADDRESS,
     contractName:    CONTRACT_NAME,
     functionName:    fn,
