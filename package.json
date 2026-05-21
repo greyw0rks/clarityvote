@@ -1,28 +1,43 @@
 {
-  "name": "clarityvote",
-  "version": "1.0.0",
-  "description": "Run unit tests on this project.",
+  "name": "@greyw0rks/clarityvote",
+  "version": "1.1.0",
+  "description": "A Clarity smart contract voting toolkit for Stacks",
   "type": "module",
   "private": false,
+  "publishConfig": {
+  "access": "public"
+},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greyw0rks/clarityvote.git"
+  },
   "scripts": {
     "test": "vitest run",
     "test:report": "vitest run -- --coverage --costs",
     "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\""
   },
-  "author": "",
-  "license": "ISC",
+
+  "keywords": [
+    "stacks",
+    "clarity",
+    "dao",
+    "governance",
+    "bitcoin",
+    "web3"
+  ],
+
+  "author": "greyw0rks",
+  "license": "MIT",
+
   "dependencies": {
     "@stacks/clarinet-sdk": "^3.9.0",
-    "@stacks/transactions": "^7.4.0",
+    "@stacks/transactions": "^7.4.0"
+  },
+
+  "devDependencies": {
     "@types/node": "^24.4.0",
     "chokidar-cli": "^3.0.0",
     "vitest": "^4.0.7",
     "vitest-environment-clarinet": "^3.0.0"
-  },
-  "overrides": {
-    "@stacks/connect-react": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
   }
 }
