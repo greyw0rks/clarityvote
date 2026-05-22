@@ -73,3 +73,11 @@ export interface ProposalResults {
   quorum: bigint;
   passed: boolean;
 }
+
+/** Pagination cursor for fetching proposal lists. */
+export interface ProposalPage {
+  proposals: Proposal[];
+  total:     number;
+  page:      number;
+  pageSize:  number;
+}
