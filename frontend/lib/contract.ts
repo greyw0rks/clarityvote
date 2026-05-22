@@ -184,3 +184,11 @@ export function buildFinalizeProposalDoc(proposalId: number) {
   // alias kept for documentation purposes — use buildFinalizeProposal in production
   return buildFinalizeProposal(proposalId);
 }
+
+/** Build explorer URL for a transaction ID. */
+export function explorerUrl(txId: string): string {
+  const base = IS_MAINNET
+    ? 'https://explorer.hiro.so/txid'
+    : 'https://explorer.hiro.so/txid?chain=testnet';
+  return `${base}/${txId}`;
+}
