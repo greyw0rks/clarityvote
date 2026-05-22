@@ -230,3 +230,6 @@
 
 ;; max-title-length: 80 ASCII characters enforced at contract level (u108).
 ;; max-description: no on-chain limit; store long text off-chain if needed.
+
+;; get-next-id: returns the next proposal ID that will be assigned.
+;; Useful for front-ends that want to predict the ID before the tx confirms.
