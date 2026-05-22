@@ -59,3 +59,8 @@ export function toSTXFull(micro: bigint): string {
   const stx = Number(micro) / 1_000_000;
   return stx.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
 }
+
+/** Clamp a percentage value between 0 and 100. */
+export function clampPct(n: number): number {
+  return Math.min(100, Math.max(0, n));
+}
