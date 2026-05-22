@@ -58,3 +58,9 @@ export interface FinalizeResult {
   state:      ProposalState;
   txId:       string;
 }
+
+export interface VoteRecord {
+  choice:      VoteChoice;
+  votingPower: bigint;
+  block:       number;
+}
