@@ -22,3 +22,10 @@ export function t2blocks(b: number): string {
   if (m < 1440) return `~${Math.round(m / 60)}h`;
   return `~${Math.round(m / 1440)}d`;
 }
+
+/** Estimate wall-clock date for a future block (10 min/block). */
+export function blocksToDate(blocksFromNow: number): string {
+  const ms   = blocksFromNow * 10 * 60 * 1000;
+  const date = new Date(Date.now() + ms);
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
