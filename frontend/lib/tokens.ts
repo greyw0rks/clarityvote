@@ -42,3 +42,11 @@ export const SP = {
   xl:  32,
   xxl: 48,
 } as const;
+
+/** Border radius scale matching --r and --rl CSS vars. */
+export const RADIUS = {
+  sm:  6,
+  md:  12,
+  lg:  18,
+  full: 9999,
+} as const;
