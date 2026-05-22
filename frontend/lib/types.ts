@@ -84,3 +84,10 @@ export interface ProposalPage {
 
 /** Possible tx broadcast states for optimistic UI updates. */
 export type TxStatus = 'idle' | 'pending' | 'success' | 'error';
+
+/** Shape of a Stacks explorer transaction link. */
+export interface ExplorerLink {
+  txId:    string;
+  network: 'mainnet' | 'testnet';
+  url:     string;
+}
