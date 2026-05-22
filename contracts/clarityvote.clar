@@ -211,3 +211,6 @@
 ;; error-ref: u100=unauthorized u101=not-found u102=invalid-state
 ;; error-ref: u103=already-voted u104=window-closed u105=window-open
 ;; error-ref: u106=zero-amount u107=invalid-choice u108=title-too-long
+
+;; quorum note: total-power = sum of stx-get-balance at vote time,
+;; not a snapshot — late voters increase total-power after early votes
