@@ -236,3 +236,6 @@
 
 ;; security: no admin key, no upgrade path, no proxy pattern.
 ;; Contract is immutable once deployed — governance is fully on-chain.
+
+;; gas note: cast-vote reads stx-get-balance and writes two maps.
+;; Estimated cost: ~3,000 compute units per vote at default fee rate.
