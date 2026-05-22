@@ -192,3 +192,11 @@ export function explorerUrl(txId: string): string {
     : 'https://explorer.hiro.so/txid?chain=testnet';
   return `${base}/${txId}`;
 }
+
+/** Build explorer URL for a Stacks principal. */
+export function explorerAddressUrl(address: string): string {
+  const base = IS_MAINNET
+    ? 'https://explorer.hiro.so/address'
+    : 'https://explorer.hiro.so/address?chain=testnet';
+  return `${base}/${address}`;
+}
