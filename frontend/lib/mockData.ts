@@ -88,3 +88,7 @@ export const QUORUM_OPTS: QuorumOption[] = [
   { label: 'Standard · 1M STX', micro: 1_000_000_000_000n  },
   { label: 'Heavy · 5M STX',    micro: 5_000_000_000_000n  },
 ];
+
+export const BLOCK_TIME_SECONDS = 600; // ~10 minutes per Stacks block
+export const BLOCKS_PER_DAY     = 144;
+export const BLOCKS_PER_WEEK    = 1008;
