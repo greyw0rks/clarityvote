@@ -103,3 +103,10 @@ select option { background: var(--s2); }
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
+
+/* ── Print styles ────────────────────────────────────────────── */
+@media print {
+  nav, footer, .vote-actions, .finalize-section { display: none; }
+  body { background: #fff; color: #000; }
+  .card { border: 1px solid #ccc; }
+}
