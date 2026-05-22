@@ -16,3 +16,10 @@ export const BADGE_STYLES: Record<string, { bg: string; color: string; border: s
 export const BADGE_ICON: Record<string, string> = {
   active: '◉', passed: '✓', rejected: '✕', tied: '⇌',
 };
+
+/** Animation durations in ms — keep in sync with globals.css transitions. */
+export const ANIM = {
+  fast:   150,
+  normal: 220,
+  slow:   500,
+} as const;
