@@ -233,3 +233,6 @@
 
 ;; get-next-id: returns the next proposal ID that will be assigned.
 ;; Useful for front-ends that want to predict the ID before the tx confirms.
+
+;; security: no admin key, no upgrade path, no proxy pattern.
+;; Contract is immutable once deployed — governance is fully on-chain.
