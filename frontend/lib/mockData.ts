@@ -92,3 +92,10 @@ export const QUORUM_OPTS: QuorumOption[] = [
 export const BLOCK_TIME_SECONDS = 600; // ~10 minutes per Stacks block
 export const BLOCKS_PER_DAY     = 144;
 export const BLOCKS_PER_WEEK    = 1008;
+
+/** Minimum quorum for a lightweight community poll (1K STX). */
+export const QUORUM_LIGHT    = 1_000_000_000n;
+/** Standard quorum for protocol decisions (1M STX). */
+export const QUORUM_STANDARD = 1_000_000_000_000n;
+/** Heavy quorum for high-impact changes (5M STX). */
+export const QUORUM_HEAVY    = 5_000_000_000_000n;
