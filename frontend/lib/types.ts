@@ -91,3 +91,11 @@ export interface ExplorerLink {
   network: 'mainnet' | 'testnet';
   url:     string;
 }
+
+/** Notification shown after a successful or failed contract call. */
+export interface ToastPayload {
+  id:      string;
+  type:    'success' | 'error' | 'info';
+  message: string;
+  txId?:   string;
+}
