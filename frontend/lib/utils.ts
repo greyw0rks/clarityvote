@@ -53,3 +53,9 @@ export function formatProposer(addr: string, prefixLen = 12): string {
 export function isActive(blocksLeft: number, finalized: boolean): boolean {
   return !finalized && blocksLeft > 0;
 }
+
+/** Format microSTX as a full STX string with 6 decimal places. */
+export function toSTXFull(micro: bigint): string {
+  const stx = Number(micro) / 1_000_000;
+  return stx.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+}
