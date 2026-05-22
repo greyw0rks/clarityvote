@@ -32,3 +32,13 @@ export const Z = {
   modal:   200,
   toast:   300,
 } as const;
+
+/** Spacing scale in px — multiples of 4. */
+export const SP = {
+  xs:  4,
+  sm:  8,
+  md:  16,
+  lg:  24,
+  xl:  32,
+  xxl: 48,
+} as const;
