@@ -242,3 +242,6 @@
 
 ;; future: delegation map (delegator → delegate) could be added
 ;; without breaking existing proposals — votes would read delegated power.
+
+;; future: multi-choice proposals would replace the u1/u2/u3 enum
+;; with a variable-length list and a ranked-IRV finalization function.
