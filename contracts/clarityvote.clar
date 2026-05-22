@@ -224,3 +224,6 @@
 
 ;; voting-power note: uses stx-get-balance at vote-time, not a snapshot.
 ;; Transferring STX after voting does not revoke or reduce your recorded power.
+
+;; tied state: reached when yes-votes == no-votes AND total >= quorum.
+;; Communities should define off-chain tiebreak procedures in their governance docs.
