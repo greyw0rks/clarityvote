@@ -34,3 +34,9 @@ export interface QuorumOption {
   label: string;
   micro: bigint;
 }
+
+export interface CreateResult {
+  proposalId: number;
+  txId:       string;
+  status:     'pending' | 'confirmed' | 'failed';
+}
