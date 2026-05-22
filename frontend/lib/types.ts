@@ -64,3 +64,12 @@ export interface VoteRecord {
   votingPower: bigint;
   block:       number;
 }
+
+export interface ProposalResults {
+  yes:    bigint;
+  no:     bigint;
+  abstain: bigint;
+  total:  bigint;
+  quorum: bigint;
+  passed: boolean;
+}
