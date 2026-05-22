@@ -42,3 +42,9 @@ export function blocksToDate(blocksFromNow: number): string {
   const date = new Date(Date.now() + ms);
   return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
+
+/** Format a Stacks principal for display (prefix + last 4). */
+export function formatProposer(addr: string, prefixLen = 12): string {
+  if (!addr || addr.length < prefixLen + 4) return addr;
+  return `${addr.slice(0, prefixLen)}…${addr.slice(-4)}`;
+}
