@@ -81,3 +81,6 @@ export interface ProposalPage {
   page:      number;
   pageSize:  number;
 }
+
+/** Possible tx broadcast states for optimistic UI updates. */
+export type TxStatus = 'idle' | 'pending' | 'success' | 'error';
