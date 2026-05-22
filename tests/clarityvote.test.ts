@@ -60,3 +60,6 @@ describe("clarityvote", () => {
     expect(result).toBeOk(Cl.uint(2));
   });
 });
+
+// Edge case: proposal with duration=1 should accept votes in the same block
+// and reject finalize until block-height > start-block + 1.
