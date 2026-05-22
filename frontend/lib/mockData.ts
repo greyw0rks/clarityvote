@@ -99,3 +99,9 @@ export const QUORUM_LIGHT    = 1_000_000_000n;
 export const QUORUM_STANDARD = 1_000_000_000_000n;
 /** Heavy quorum for high-impact changes (5M STX). */
 export const QUORUM_HEAVY    = 5_000_000_000_000n;
+
+/** Hiro explorer base URLs per network. */
+export const EXPLORER_BASE = {
+  mainnet: 'https://explorer.hiro.so/txid',
+  testnet: 'https://explorer.hiro.so/txid?chain=testnet',
+} as const;
