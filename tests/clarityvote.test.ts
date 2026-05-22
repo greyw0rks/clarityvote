@@ -69,3 +69,6 @@ describe("clarityvote", () => {
 
 // Coverage target: all eight error codes should have at least one
 // negative test asserting the exact uint error value.
+
+// Integration path: once deployed to testnet, run the same test suite
+// against the live contract using @stacks/transactions callReadOnly helpers.
