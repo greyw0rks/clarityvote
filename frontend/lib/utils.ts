@@ -48,3 +48,8 @@ export function formatProposer(addr: string, prefixLen = 12): string {
   if (!addr || addr.length < prefixLen + 4) return addr;
   return `${addr.slice(0, prefixLen)}…${addr.slice(-4)}`;
 }
+
+/** Returns true if a proposal voting window is still open. */
+export function isActive(blocksLeft: number, finalized: boolean): boolean {
+  return !finalized && blocksLeft > 0;
+}
