@@ -141,3 +141,10 @@ select option { background: var(--s2); }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ── Subtle divider ──────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--bdr);
+  margin: 1.5rem 0;
+}
