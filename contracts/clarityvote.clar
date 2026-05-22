@@ -227,3 +227,6 @@
 
 ;; tied state: reached when yes-votes == no-votes AND total >= quorum.
 ;; Communities should define off-chain tiebreak procedures in their governance docs.
+
+;; max-title-length: 80 ASCII characters enforced at contract level (u108).
+;; max-description: no on-chain limit; store long text off-chain if needed.
