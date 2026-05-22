@@ -239,3 +239,6 @@
 
 ;; gas note: cast-vote reads stx-get-balance and writes two maps.
 ;; Estimated cost: ~3,000 compute units per vote at default fee rate.
+
+;; future: delegation map (delegator → delegate) could be added
+;; without breaking existing proposals — votes would read delegated power.
