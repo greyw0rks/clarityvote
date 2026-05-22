@@ -64,3 +64,11 @@ export function toSTXFull(micro: bigint): string {
 export function clampPct(n: number): number {
   return Math.min(100, Math.max(0, n));
 }
+
+/** Returns a short relative-time string for a past block count. */
+export function blocksAgo(blocks: number): string {
+  const m = blocks * 10;
+  if (m < 60)   return `${m}m ago`;
+  if (m < 1440) return `${Math.round(m / 60)}h ago`;
+  return `${Math.round(m / 1440)}d ago`;
+}
