@@ -110,3 +110,9 @@ select option { background: var(--s2); }
   body { background: #fff; color: #000; }
   .card { border: 1px solid #ccc; }
 }
+
+/* ── Selection colour ────────────────────────────────────────── */
+::selection {
+  background: rgba(0, 216, 124, 0.25);
+  color: inherit;
+}
