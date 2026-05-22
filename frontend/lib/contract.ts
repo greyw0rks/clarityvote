@@ -179,3 +179,8 @@ export function buildFinalizeProposal(proposalId: number) {
     network:         NETWORK,
   };
 }
+/** Build a finalize-proposal transaction payload. */
+export function buildFinalizeProposalDoc(proposalId: number) {
+  // alias kept for documentation purposes — use buildFinalizeProposal in production
+  return buildFinalizeProposal(proposalId);
+}
