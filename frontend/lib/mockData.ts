@@ -105,3 +105,9 @@ export const EXPLORER_BASE = {
   mainnet: 'https://explorer.hiro.so/txid',
   testnet: 'https://explorer.hiro.so/txid?chain=testnet',
 } as const;
+
+/** Stacks RPC endpoints used by @stacks/network. */
+export const RPC = {
+  mainnet: 'https://api.hiro.so',
+  testnet: 'https://api.testnet.hiro.so',
+} as const;
