@@ -23,3 +23,12 @@ export const ANIM = {
   normal: 220,
   slow:   500,
 } as const;
+
+/** Z-index scale to avoid magic numbers in components. */
+export const Z = {
+  base:    0,
+  card:    1,
+  nav:     100,
+  modal:   200,
+  toast:   300,
+} as const;
