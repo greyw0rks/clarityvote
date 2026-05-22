@@ -46,3 +46,9 @@ export interface FinalizeResult {
   state:      ProposalState;
   txId:       string;
 }
+
+export interface CreateResult {
+  proposalId: number;
+  txId:       string;
+  status:     'pending' | 'confirmed' | 'failed';
+}
