@@ -77,3 +77,13 @@ export function blocksAgo(blocks: number): string {
 export function plural(n: number, word: string, suffix = 's'): string {
   return `${n} ${word}${n === 1 ? '' : suffix}`;
 }
+
+/** Copy text to clipboard; returns true on success. */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
