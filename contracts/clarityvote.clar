@@ -207,3 +207,7 @@
     (asserts! (not (get finalized proposal)) ERR-INVALID-STATE)
     (map-set proposals proposal-id (merge proposal { finalized: true, state: STATE-REJECTED }))
     (ok true)))
+
+;; error-ref: u100=unauthorized u101=not-found u102=invalid-state
+;; error-ref: u103=already-voted u104=window-closed u105=window-open
+;; error-ref: u106=zero-amount u107=invalid-choice u108=title-too-long
