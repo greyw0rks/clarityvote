@@ -50,3 +50,13 @@ export const RADIUS = {
   lg:  18,
   full: 9999,
 } as const;
+
+/** Font size scale in px matching body=15px baseline. */
+export const FS = {
+  xs:  11,
+  sm:  13,
+  md:  15,
+  lg:  17,
+  xl:  22,
+  h1:  32,
+} as const;
