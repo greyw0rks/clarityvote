@@ -14,3 +14,11 @@ node_modules
 # local clarinet state
 .clarinet/
 artifacts/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
