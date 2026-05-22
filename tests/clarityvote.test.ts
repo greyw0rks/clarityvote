@@ -66,3 +66,6 @@ describe("clarityvote", () => {
 
 // Edge case: zero-balance voter (stx-get-balance = 0) should still be
 // allowed to vote — their power is 0 and contributes nothing to totals.
+
+// Coverage target: all eight error codes should have at least one
+// negative test asserting the exact uint error value.
