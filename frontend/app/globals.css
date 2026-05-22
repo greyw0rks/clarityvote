@@ -116,3 +116,15 @@ select option { background: var(--s2); }
   background: rgba(0, 216, 124, 0.25);
   color: inherit;
 }
+
+/* ── Loading skeleton pulse ──────────────────────────────────── */
+@keyframes skeleton {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+.skeleton {
+  background: var(--s2);
+  border-radius: var(--r);
+  animation: skeleton 1.6s ease infinite;
+}
