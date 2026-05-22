@@ -72,3 +72,6 @@ describe("clarityvote", () => {
 
 // Integration path: once deployed to testnet, run the same test suite
 // against the live contract using @stacks/transactions callReadOnly helpers.
+
+// Performance note: each simnet.callPublicFn mines one block.
+// For proposals with duration > 100 blocks, prefer mineEmptyBlocks(n).
