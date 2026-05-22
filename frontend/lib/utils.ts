@@ -72,3 +72,8 @@ export function blocksAgo(blocks: number): string {
   if (m < 1440) return `${Math.round(m / 60)}h ago`;
   return `${Math.round(m / 1440)}d ago`;
 }
+
+/** Pluralise a word based on count. */
+export function plural(n: number, word: string, suffix = 's'): string {
+  return `${n} ${word}${n === 1 ? '' : suffix}`;
+}
