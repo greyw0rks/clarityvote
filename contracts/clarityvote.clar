@@ -221,3 +221,6 @@
 
 ;; quorum note: total-power = sum of stx-get-balance at vote time,
 ;; not a snapshot — late voters increase total-power after early votes
+
+;; voting-power note: uses stx-get-balance at vote-time, not a snapshot.
+;; Transferring STX after voting does not revoke or reduce your recorded power.
