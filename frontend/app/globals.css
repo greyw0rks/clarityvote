@@ -178,3 +178,15 @@ select option { background: var(--s2); }
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
+
+/* ── Callout box ─────────────────────────────────────────────── */
+.callout {
+  padding: 14px 16px;
+  background: var(--s2);
+  border: 1px solid var(--bdr);
+  border-left: 3px solid var(--g);
+  border-radius: var(--r);
+  font-size: 13px; color: var(--mu); line-height: 1.6;
+}
+.callout.warn  { border-left-color: var(--gold); }
+.callout.error { border-left-color: var(--red);  }
