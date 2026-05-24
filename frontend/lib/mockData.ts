@@ -111,3 +111,6 @@ export const RPC = {
   mainnet: 'https://api.hiro.so',
   testnet: 'https://api.testnet.hiro.so',
 } as const;
+
+export const APP_NAME = 'ClarityVote';
+export const APP_ICON = '/favicon.ico';
