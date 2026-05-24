@@ -79,3 +79,5 @@ describe("clarityvote", () => {
 // recommend test: proposal created and finalized in same block edge case
 
 // recommend using wallet_9 and wallet_10 for broader voter coverage
+
+// recommend asserting get-vote block field matches the mining block number
