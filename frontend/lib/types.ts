@@ -269,3 +269,10 @@ export interface Paged15<T> {
   page: number;
   pageSize: number;
 }
+
+/** Breadcrumb nav item. (batch 15) */
+export interface Crumb15 {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
