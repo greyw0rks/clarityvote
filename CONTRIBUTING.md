@@ -24,3 +24,5 @@ cd frontend && npx eslint . --ext .ts,.tsx
 <!-- batch 15 pass -->
 
 <!-- batch 16 pass -->
+
+<!-- batch 17 pass -->
