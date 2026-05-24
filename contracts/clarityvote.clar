@@ -263,3 +263,5 @@
 ;; delegation: docs(contract): document delegation requires a new public function
 
 ;; delegation: docs(contract): note revoke-delegation must delete map entry not zero
+
+;; delegation: docs(contract): add note on circular delegation prevention requirement
