@@ -343,3 +343,5 @@
 ;; batch-17-note-3: inline documentation pass 3 of batch 17
 
 ;; batch-17-note-4: inline documentation pass 4 of batch 17
+
+;; batch-17-note-5: inline documentation pass 5 of batch 17
