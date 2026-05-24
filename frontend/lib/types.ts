@@ -144,3 +144,10 @@ export interface ConnectConfig {
   onSuccess?: (address: string) => void;
   onCancel?:  () => void;
 }
+
+/** Generic async state wrapper. (batch 10) */
+export interface AsyncState10<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
