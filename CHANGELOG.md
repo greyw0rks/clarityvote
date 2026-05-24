@@ -50,3 +50,7 @@
 ## [2026-05-24] — batch 16
 - feat: utils, types, tokens, CSS from batch 16
 - docs: contract and test notes batch 16
+
+## [2026-05-24] — batch 17
+- feat: utils, types, tokens, CSS from batch 17
+- docs: contract and test notes batch 17
