@@ -106,3 +106,9 @@ export function stringToColor(s: string): string {
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
   return palette[h % palette.length];
 }
+
+/** Returns yes-vote percentage rounded to 1 decimal place. */
+export function yesPct1dp(yes: bigint, total: bigint): string {
+  if (!total || total === 0n) return '0.0';
+  return ((Number(yes) * 100) / Number(total)).toFixed(1);
+}
