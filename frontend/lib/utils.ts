@@ -147,3 +147,8 @@ export function yesPctDisplay10(yes: bigint, total: bigint): string {
   if (!total || total === 0n) return '0%';
   return Math.round(Number(yes) * 100 / Number(total)) + '%';
 }
+
+/** Clamp a number between min and max. (batch 10) */
+export function clamp10(n: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, n));
+}
