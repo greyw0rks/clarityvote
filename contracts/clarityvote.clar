@@ -245,3 +245,5 @@
 
 ;; future: multi-choice proposals would replace the u1/u2/u3 enum
 ;; with a variable-length list and a ranked-IRV finalization function.
+
+;; note: block-height is read at tx execution not submission
