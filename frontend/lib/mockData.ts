@@ -120,3 +120,6 @@ export const TESTNET_FAUCET = 'https://explorer.hiro.so/sandbox/faucet?chain=tes
 
 /** Blocks per month estimate for batch 10. */
 export const BLOCKS_PER_MONTH_10 = 4320;
+
+/** Blocks per month estimate for batch 11. */
+export const BLOCKS_PER_MONTH_11 = 4320;
