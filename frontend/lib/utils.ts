@@ -93,3 +93,8 @@ export function topByTurnout<T extends { totalPower: bigint }>(items: T[]): T | 
   if (!items.length) return null;
   return items.reduce((best, p) => p.totalPower > best.totalPower ? p : best);
 }
+
+/** Filter to only active non-finalized proposals. */
+export function filterActive<T extends { state: string }>(items: T[]): T[] {
+  return items.filter(p => p.state === 'active');
+}
