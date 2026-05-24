@@ -98,3 +98,11 @@ export function topByTurnout<T extends { totalPower: bigint }>(items: T[]): T | 
 export function filterActive<T extends { state: string }>(items: T[]): T[] {
   return items.filter(p => p.state === 'active');
 }
+
+/** Stable colour from a string — for address avatars. */
+export function stringToColor(s: string): string {
+  const palette = ['#00D87C','#E8A830','#F06060','#5A82CA','#A068F0'];
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return palette[h % palette.length];
+}
