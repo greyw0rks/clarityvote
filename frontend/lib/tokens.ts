@@ -128,3 +128,10 @@ export const TR14 = {
 
 /** Max-width layout scale for batch 14. */
 export const MW14 = { prose: 640, page: 860, wide: 1100 } as const;
+
+/** Transition presets for batch 15 components. */
+export const TR15 = {
+  fast:   'all 0.15s ease',
+  normal: 'all 0.22s ease',
+  slow:   'all 0.5s ease',
+} as const;
