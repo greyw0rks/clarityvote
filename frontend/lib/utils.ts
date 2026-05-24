@@ -256,3 +256,8 @@ export function clamp15(n: number, lo: number, hi: number): number {
 /** Sleep for ms milliseconds. (batch 15) */
 export const delay15 = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
+
+/** Returns true when the voting window has closed. (batch 16) */
+export function isWindowClosed16(blocksLeft: number): boolean {
+  return blocksLeft <= 0;
+}
