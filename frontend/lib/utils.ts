@@ -141,3 +141,9 @@ export function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: numb
 export function isWindowClosed10(blocksLeft: number): boolean {
   return blocksLeft <= 0;
 }
+
+/** Returns yes-vote share as a rounded percentage string. (batch 10) */
+export function yesPctDisplay10(yes: bigint, total: bigint): string {
+  if (!total || total === 0n) return '0%';
+  return Math.round(Number(yes) * 100 / Number(total)) + '%';
+}
