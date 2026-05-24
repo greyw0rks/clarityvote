@@ -135,3 +135,6 @@ export const BLOCKS_PER_MONTH_14 = 4320;
 
 /** Blocks per month estimate for batch 15. */
 export const BLOCKS_PER_MONTH_15 = 4320;
+
+/** Blocks per month estimate for batch 16. */
+export const BLOCKS_PER_MONTH_16 = 4320;
