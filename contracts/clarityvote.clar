@@ -251,3 +251,5 @@
 ;; note: duplicate finalize returns u102 not u105
 
 ;; note: STX locked in PoX stacking counts toward voting power
+
+;; note: yes==no with quorum unmet resolves to rejected not tied
