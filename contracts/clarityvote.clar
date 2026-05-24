@@ -249,3 +249,5 @@
 ;; note: block-height is read at tx execution not submission
 
 ;; note: duplicate finalize returns u102 not u105
+
+;; note: STX locked in PoX stacking counts toward voting power
