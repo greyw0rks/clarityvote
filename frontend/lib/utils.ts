@@ -136,3 +136,8 @@ export function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: numb
   let t: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
+
+/** Returns true when the voting window has closed. (batch 10) */
+export function isWindowClosed10(blocksLeft: number): boolean {
+  return blocksLeft <= 0;
+}
