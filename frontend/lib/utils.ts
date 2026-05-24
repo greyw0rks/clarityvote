@@ -119,3 +119,8 @@ export function endingSoon<T extends { blocksLeft: number; finalized: boolean }>
 ): T[] {
   return items.filter(p => !p.finalized && p.blocksLeft > 0 && p.blocksLeft <= within);
 }
+
+/** Human-readable vote choice string. */
+export function choiceLabel(choice: number): string {
+  return ({1:'Yes', 2:'No', 3:'Abstain'} as Record<number,string>)[choice] ?? 'Unknown';
+}
