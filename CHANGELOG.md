@@ -22,3 +22,7 @@
 - feat: .callout, .row, .card-glow CSS utilities
 - security: security headers in vercel.json
 - docs(contract): delegation design notes across 5 comments
+
+## [2026-05-24] — batch 10
+- feat: utils, types, tokens, CSS from batch 10
+- docs: contract and test notes batch 10
