@@ -187,3 +187,8 @@ export function yesPctDisplay12(yes: bigint, total: bigint): string {
   if (!total || total === 0n) return '0%';
   return Math.round(Number(yes) * 100 / Number(total)) + '%';
 }
+
+/** Clamp a number between min and max. (batch 12) */
+export function clamp12(n: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, n));
+}
