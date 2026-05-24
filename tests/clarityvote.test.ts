@@ -77,3 +77,5 @@ describe("clarityvote", () => {
 // For proposals with duration > 100 blocks, prefer mineEmptyBlocks(n).
 
 // recommend test: proposal created and finalized in same block edge case
+
+// recommend using wallet_9 and wallet_10 for broader voter coverage
