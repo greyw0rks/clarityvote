@@ -212,3 +212,7 @@ export function yesPctDisplay13(yes: bigint, total: bigint): string {
 export function clamp13(n: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, n));
 }
+
+/** Sleep for ms milliseconds. (batch 13) */
+export const delay13 = (ms: number): Promise<void> =>
+  new Promise(resolve => setTimeout(resolve, ms));
