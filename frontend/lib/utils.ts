@@ -112,3 +112,10 @@ export function yesPct1dp(yes: bigint, total: bigint): string {
   if (!total || total === 0n) return '0.0';
   return ((Number(yes) * 100) / Number(total)).toFixed(1);
 }
+
+/** Proposals ending within N blocks. */
+export function endingSoon<T extends { blocksLeft: number; finalized: boolean }>(
+  items: T[], within = 144
+): T[] {
+  return items.filter(p => !p.finalized && p.blocksLeft > 0 && p.blocksLeft <= within);
+}
