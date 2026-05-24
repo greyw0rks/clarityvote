@@ -114,3 +114,6 @@ export const RPC = {
 
 export const APP_NAME = 'ClarityVote';
 export const APP_ICON = '/favicon.ico';
+
+export const SHARE_BASE = 'https://clarityvote.vercel.app/proposals';
+export const TESTNET_FAUCET = 'https://explorer.hiro.so/sandbox/faucet?chain=testnet';
