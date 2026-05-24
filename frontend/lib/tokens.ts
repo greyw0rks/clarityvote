@@ -85,3 +85,6 @@ export const TR10 = {
   normal: 'all 0.22s ease',
   slow:   'all 0.5s ease',
 } as const;
+
+/** Max-width layout scale for batch 10. */
+export const MW10 = { prose: 640, page: 860, wide: 1100 } as const;
