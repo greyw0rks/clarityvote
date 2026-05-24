@@ -173,3 +173,11 @@ export interface AsyncState11<T> {
   loading: boolean;
   error: string | null;
 }
+
+/** Paginated list wrapper. (batch 11) */
+export interface Paged11<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
