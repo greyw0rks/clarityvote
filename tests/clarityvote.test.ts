@@ -85,3 +85,5 @@ describe("clarityvote", () => {
 // docs(tests): recommend 10-voter stress test in single mineBlock call
 
 // docs(tests): note mineBlock batches txs atomically in simnet
+
+// docs(tests): recommend partial quorum state test before finalize
