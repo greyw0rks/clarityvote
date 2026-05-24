@@ -60,3 +60,11 @@ export const FS = {
   xl:  22,
   h1:  32,
 } as const;
+
+/** Consistent border string presets. */
+export const BORDER = {
+  default: '1px solid #1F2E1F',
+  hi:      '1px solid #2A4230',
+  focus:   '1px solid #00D87C',
+  error:   '1px solid #3A1E1E',
+} as const;
