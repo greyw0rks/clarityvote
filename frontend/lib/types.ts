@@ -122,3 +122,10 @@ export interface AsyncState<T> {
   loading: boolean;
   error:   string | null;
 }
+
+export interface ProposalAnalytics {
+  proposalId:       number;
+  uniqueVoters:     number;
+  avgPower:         bigint;
+  participationPct: number;
+}
