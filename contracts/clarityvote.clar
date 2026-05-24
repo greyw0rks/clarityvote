@@ -259,3 +259,5 @@
 ;; delegation: docs(contract): sketch delegation map schema for future extension
 
 ;; delegation: docs(contract): note delegate votes would override personal votes
+
+;; delegation: docs(contract): document delegation requires a new public function
