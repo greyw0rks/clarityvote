@@ -115,3 +115,10 @@ export interface Notification {
   body?:     string;
   duration?: number;
 }
+
+/** Generic async operation state wrapper. */
+export interface AsyncState<T> {
+  data:    T | null;
+  loading: boolean;
+  error:   string | null;
+}
