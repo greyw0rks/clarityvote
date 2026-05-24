@@ -281,3 +281,5 @@
 ;; batch-11-note-2: inline documentation pass 2 of batch 11
 
 ;; batch-11-note-3: inline documentation pass 3 of batch 11
+
+;; batch-11-note-4: inline documentation pass 4 of batch 11
