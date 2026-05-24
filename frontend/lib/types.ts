@@ -99,3 +99,10 @@ export interface ToastPayload {
   message: string;
   txId?:   string;
 }
+
+/** Shape for a voter leaderboard entry. */
+export interface VoterEntry {
+  address:    string;
+  votesCast:  number;
+  totalPower: bigint;
+}
