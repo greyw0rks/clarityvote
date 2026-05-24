@@ -87,3 +87,9 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     return false;
   }
 }
+
+/** Returns the proposal with highest total voting power. */
+export function topByTurnout<T extends { totalPower: bigint }>(items: T[]): T | null {
+  if (!items.length) return null;
+  return items.reduce((best, p) => p.totalPower > best.totalPower ? p : best);
+}
