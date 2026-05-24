@@ -38,3 +38,7 @@
 ## [2026-05-24] — batch 13
 - feat: utils, types, tokens, CSS from batch 13
 - docs: contract and test notes batch 13
+
+## [2026-05-24] — batch 14
+- feat: utils, types, tokens, CSS from batch 14
+- docs: contract and test notes batch 14
