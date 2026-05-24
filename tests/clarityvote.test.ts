@@ -129,3 +129,5 @@ describe("clarityvote", () => {
 // batch-16-coverage-7: additional test coverage target
 
 // batch-16-coverage-8: additional test coverage target
+
+// batch-17-coverage-6: additional test coverage target
