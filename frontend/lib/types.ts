@@ -106,3 +106,12 @@ export interface VoterEntry {
   votesCast:  number;
   totalPower: bigint;
 }
+
+/** Notification queue item for toast system. */
+export interface Notification {
+  id:        string;
+  type:      'success' | 'error' | 'info' | 'warning';
+  title:     string;
+  body?:     string;
+  duration?: number;
+}
