@@ -201,3 +201,9 @@ export const delay12 = (ms: number): Promise<void> =>
 export function isWindowClosed13(blocksLeft: number): boolean {
   return blocksLeft <= 0;
 }
+
+/** Returns yes-vote share as a rounded percentage string. (batch 13) */
+export function yesPctDisplay13(yes: bigint, total: bigint): string {
+  if (!total || total === 0n) return '0%';
+  return Math.round(Number(yes) * 100 / Number(total)) + '%';
+}
