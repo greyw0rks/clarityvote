@@ -339,3 +339,9 @@ export function yesLead(yes: bigint, no: bigint, total: bigint): number {
   if (!total || total === 0n) return 0;
   return Math.round(((Number(yes) - Number(no)) * 100) / Number(total));
 }
+
+/** Debounce a function by ms milliseconds. */
+export function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number) {
+  let t: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
