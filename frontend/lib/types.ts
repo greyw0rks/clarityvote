@@ -357,3 +357,11 @@ export interface DelegationRecord {
   power:      bigint;
   sinceBlock: number;
 }
+
+export interface ConnectConfig {
+  appName:    string;
+  appIconUrl: string;
+  network:    StacksNetwork;
+  onSuccess?: (address: string) => void;
+  onCancel?:  () => void;
+}
