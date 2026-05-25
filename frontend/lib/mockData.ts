@@ -147,3 +147,6 @@ export const APP_ICON = '/favicon.ico';
 
 export const SHARE_BASE = 'https://clarityvote.vercel.app/proposals';
 export const TESTNET_FAUCET = 'https://explorer.hiro.so/sandbox/faucet?chain=testnet';
+
+/** Blocks per month estimate for batch 10. */
+export const BLOCKS_PER_MONTH_10 = 4320;
