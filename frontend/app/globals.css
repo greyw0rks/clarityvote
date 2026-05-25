@@ -337,3 +337,13 @@ select option { background: var(--s2); }
   padding: 2px 8px; background: var(--s2); border: 1px solid var(--bdr);
   border-radius: 4px; font-size: 11px; color: var(--mu);
 }
+
+/* ── Live dot indicator ──────────────────────────────────────── */
+.live-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--g);
+  animation: pulse 1.8s ease infinite;
+  flex-shrink: 0;
+}
