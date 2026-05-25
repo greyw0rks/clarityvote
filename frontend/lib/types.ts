@@ -468,3 +468,10 @@ export interface Paged14<T> {
   page: number;
   pageSize: number;
 }
+
+/** Breadcrumb nav item. (batch 14) */
+export interface Crumb14 {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
