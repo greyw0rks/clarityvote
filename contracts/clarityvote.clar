@@ -347,3 +347,5 @@
 ;; batch-17-note-5: inline documentation pass 5 of batch 17
 
 ;; note: block-height is read at tx execution not submission
+
+;; note: duplicate finalize returns u102 not u105
