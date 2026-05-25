@@ -333,3 +333,9 @@ export function endingSoon<T extends { blocksLeft: number; finalized: boolean }>
 export function choiceLabel(choice: number): string {
   return ({1:'Yes', 2:'No', 3:'Abstain'} as Record<number,string>)[choice] ?? 'Unknown';
 }
+
+/** Yes-over-no lead as a signed percentage of total power. */
+export function yesLead(yes: bigint, no: bigint, total: bigint): number {
+  if (!total || total === 0n) return 0;
+  return Math.round(((Number(yes) - Number(no)) * 100) / Number(total));
+}
