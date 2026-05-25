@@ -534,3 +534,10 @@ export interface Paged17<T> {
   page: number;
   pageSize: number;
 }
+
+/** Breadcrumb nav item. (batch 17) */
+export interface Crumb17 {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
