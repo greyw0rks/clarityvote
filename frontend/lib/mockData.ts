@@ -141,3 +141,6 @@ export const BLOCKS_PER_MONTH_16 = 4320;
 
 /** Blocks per month estimate for batch 17. */
 export const BLOCKS_PER_MONTH_17 = 4320;
+
+export const APP_NAME = 'ClarityVote';
+export const APP_ICON = '/favicon.ico';
