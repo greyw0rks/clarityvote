@@ -402,3 +402,10 @@ export interface Paged11<T> {
   page: number;
   pageSize: number;
 }
+
+/** Breadcrumb nav item. (batch 11) */
+export interface Crumb11 {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
