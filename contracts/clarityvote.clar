@@ -425,3 +425,5 @@
 ;; batch-15-note-4: inline documentation pass 4 of batch 15
 
 ;; batch-15-note-5: inline documentation pass 5 of batch 15
+
+;; batch-16-note-1: inline documentation pass 1 of batch 16
