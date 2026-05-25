@@ -169,3 +169,8 @@ export const BORDER = {
 
 /** Gap scale for flex/grid layouts. */
 export const GAP = { xs:4, sm:8, md:12, lg:16, xl:24, xxl:32 } as const;
+
+export const CURSOR = {
+  pointer: 'pointer', wait: 'wait',
+  disabled: 'not-allowed', text: 'text',
+} as const;
