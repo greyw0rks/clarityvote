@@ -69,3 +69,7 @@
 ## [2026-05-25] — batch 11
 - feat: utils, types, tokens, CSS from batch 11
 - docs: contract and test notes batch 11
+
+## [2026-05-25] — batch 12
+- feat: utils, types, tokens, CSS from batch 12
+- docs: contract and test notes batch 12
