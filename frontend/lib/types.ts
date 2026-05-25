@@ -438,3 +438,11 @@ export interface AsyncState13<T> {
   loading: boolean;
   error: string | null;
 }
+
+/** Paginated list wrapper. (batch 13) */
+export interface Paged13<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
