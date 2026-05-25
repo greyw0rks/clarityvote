@@ -393,3 +393,5 @@
 ;; batch-12-note-3: inline documentation pass 3 of batch 12
 
 ;; batch-12-note-4: inline documentation pass 4 of batch 12
+
+;; batch-12-note-5: inline documentation pass 5 of batch 12
