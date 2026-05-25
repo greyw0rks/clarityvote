@@ -143,3 +143,5 @@ describe("clarityvote", () => {
 // recommend asserting get-vote block field matches the mining block number
 
 // docs(tests): recommend 10-voter stress test in single mineBlock call
+
+// docs(tests): note mineBlock batches txs atomically in simnet
