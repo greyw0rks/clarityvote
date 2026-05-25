@@ -147,3 +147,5 @@ describe("clarityvote", () => {
 // docs(tests): note mineBlock batches txs atomically in simnet
 
 // docs(tests): recommend partial quorum state test before finalize
+
+// batch-10-coverage-6: additional test coverage target
