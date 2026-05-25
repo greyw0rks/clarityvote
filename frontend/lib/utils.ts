@@ -481,3 +481,7 @@ export function yesPctDisplay16(yes: bigint, total: bigint): string {
 export function clamp16(n: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, n));
 }
+
+/** Sleep for ms milliseconds. (batch 16) */
+export const delay16 = (ms: number): Promise<void> =>
+  new Promise(resolve => setTimeout(resolve, ms));
