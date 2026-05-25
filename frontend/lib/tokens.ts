@@ -253,3 +253,6 @@ export const TR17 = {
   normal: 'all 0.22s ease',
   slow:   'all 0.5s ease',
 } as const;
+
+/** Max-width layout scale for batch 17. */
+export const MW17 = { prose: 640, page: 860, wide: 1100 } as const;
