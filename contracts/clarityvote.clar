@@ -411,3 +411,5 @@
 ;; batch-14-note-2: inline documentation pass 2 of batch 14
 
 ;; batch-14-note-3: inline documentation pass 3 of batch 14
+
+;; batch-14-note-4: inline documentation pass 4 of batch 14
