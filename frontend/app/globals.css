@@ -519,3 +519,10 @@ select option { background: var(--s2); }
 /* batch 17: hover lift */
 .lift-17 { transition: transform .15s ease, box-shadow .15s ease; }
 .lift-17:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+
+/* batch 17: inline chip */
+.chip-17 {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; background: var(--s2); border: 1px solid var(--bdr);
+  border-radius: 4px; font-size: 11px; color: var(--mu);
+}
