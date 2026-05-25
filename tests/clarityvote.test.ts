@@ -137,3 +137,5 @@ describe("clarityvote", () => {
 // batch-17-coverage-8: additional test coverage target
 
 // recommend test: proposal created and finalized in same block edge case
+
+// recommend using wallet_9 and wallet_10 for broader voter coverage
