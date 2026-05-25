@@ -390,3 +390,9 @@ select option { background: var(--s2); }
   background: var(--s1);
   box-shadow: 0 0 0 1px var(--bdh), 0 4px 24px rgba(0,216,124,.06);
 }
+
+/* batch 10: section label */
+.section-label-10 {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--mu); margin-bottom: 12px;
+}
