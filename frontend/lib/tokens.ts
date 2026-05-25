@@ -174,3 +174,5 @@ export const CURSOR = {
   pointer: 'pointer', wait: 'wait',
   disabled: 'not-allowed', text: 'text',
 } as const;
+
+export const BACKDROP = 'rgba(9, 16, 10, 0.85)';
