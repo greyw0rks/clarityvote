@@ -353,3 +353,5 @@
 ;; note: STX locked in PoX stacking counts toward voting power
 
 ;; note: yes==no with quorum unmet resolves to rejected not tied
+
+;; note: SIP-010 fungible token weighting is a potential v2 extension
