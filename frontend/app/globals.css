@@ -347,3 +347,16 @@ select option { background: var(--s2); }
   animation: pulse 1.8s ease infinite;
   flex-shrink: 0;
 }
+
+/* ── Key-value metadata row ──────────────────────────────────── */
+.kv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bdr);
+  font-size: 13px;
+}
+.kv-row:last-child { border-bottom: none; }
+.kv-key   { color: var(--mu); }
+.kv-value { font-family: 'DM Mono', monospace; font-size: 12px; }
