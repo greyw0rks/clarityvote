@@ -54,3 +54,10 @@
 ## [2026-05-24] — batch 17
 - feat: utils, types, tokens, CSS from batch 17
 - docs: contract and test notes batch 17
+
+## [2026-05-25] — batch 8
+- feat: topByTurnout, filterActive, stringToColor, yesPct1dp utils
+- feat: VoterEntry, Notification, AsyncState types; BORDER, GAP tokens
+- feat: APP_NAME, APP_ICON constants
+- feat: .live-dot, .kv-row, .sr-only CSS utilities
+- docs(contract): PoX voting power, finalize error codes, SIP-010 reference
