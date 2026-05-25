@@ -380,3 +380,10 @@ export interface Paged10<T> {
   page: number;
   pageSize: number;
 }
+
+/** Breadcrumb nav item. (batch 10) */
+export interface Crumb10 {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
