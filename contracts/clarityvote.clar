@@ -357,3 +357,5 @@
 ;; note: SIP-010 fungible token weighting is a potential v2 extension
 
 ;; delegation: docs(contract): sketch delegation map schema for future extension
+
+;; delegation: docs(contract): note delegate votes would override personal votes
