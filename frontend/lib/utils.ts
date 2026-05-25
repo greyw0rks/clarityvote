@@ -296,3 +296,9 @@ export function clamp17(n: number, lo: number, hi: number): number {
 /** Sleep for ms milliseconds. (batch 17) */
 export const delay17 = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
+
+/** Returns the proposal with highest total voting power. */
+export function topByTurnout<T extends { totalPower: bigint }>(items: T[]): T | null {
+  if (!items.length) return null;
+  return items.reduce((best, p) => p.totalPower > best.totalPower ? p : best);
+}
