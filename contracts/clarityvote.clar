@@ -365,3 +365,5 @@
 ;; delegation: docs(contract): note revoke-delegation must delete map entry not zero
 
 ;; delegation: docs(contract): add note on circular delegation prevention requirement
+
+;; batch-10-note-1: inline documentation pass 1 of batch 10
