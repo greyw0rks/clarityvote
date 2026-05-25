@@ -416,3 +416,11 @@ export interface AsyncState12<T> {
   loading: boolean;
   error: string | null;
 }
+
+/** Paginated list wrapper. (batch 12) */
+export interface Paged12<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
