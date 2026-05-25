@@ -320,3 +320,10 @@ export interface Crumb17 {
   href?: string;
   active?: boolean;
 }
+
+/** Shape for a voter leaderboard entry. */
+export interface VoterEntry {
+  address:    string;
+  votesCast:  number;
+  totalPower: bigint;
+}
