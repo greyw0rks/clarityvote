@@ -61,3 +61,7 @@
 - feat: APP_NAME, APP_ICON constants
 - feat: .live-dot, .kv-row, .sr-only CSS utilities
 - docs(contract): PoX voting power, finalize error codes, SIP-010 reference
+
+## [2026-05-25] — batch 10
+- feat: utils, types, tokens, CSS from batch 10
+- docs: contract and test notes batch 10
