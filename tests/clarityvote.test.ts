@@ -149,3 +149,5 @@ describe("clarityvote", () => {
 // docs(tests): recommend partial quorum state test before finalize
 
 // batch-10-coverage-6: additional test coverage target
+
+// batch-10-coverage-7: additional test coverage target
