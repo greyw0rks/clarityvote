@@ -26,3 +26,9 @@ cd frontend && npx eslint . --ext .ts,.tsx
 <!-- batch 16 pass -->
 
 <!-- batch 17 pass -->
+
+## Type checking
+
+```bash
+cd frontend && npx tsc --noEmit
+```
