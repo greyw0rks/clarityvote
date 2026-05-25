@@ -350,3 +350,10 @@ export interface ProposalAnalytics {
   avgPower:         bigint;
   participationPct: number;
 }
+
+export interface DelegationRecord {
+  delegator:  string;
+  delegate:   string;
+  power:      bigint;
+  sinceBlock: number;
+}
