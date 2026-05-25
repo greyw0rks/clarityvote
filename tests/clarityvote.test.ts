@@ -135,3 +135,5 @@ describe("clarityvote", () => {
 // batch-17-coverage-7: additional test coverage target
 
 // batch-17-coverage-8: additional test coverage target
+
+// recommend test: proposal created and finalized in same block edge case
