@@ -176,3 +176,10 @@ export const CURSOR = {
 } as const;
 
 export const BACKDROP = 'rgba(9, 16, 10, 0.85)';
+
+/** Transition presets for batch 10 components. */
+export const TR10 = {
+  fast:   'all 0.15s ease',
+  normal: 'all 0.22s ease',
+  slow:   'all 0.5s ease',
+} as const;
