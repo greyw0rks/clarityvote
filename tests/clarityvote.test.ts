@@ -141,3 +141,5 @@ describe("clarityvote", () => {
 // recommend using wallet_9 and wallet_10 for broader voter coverage
 
 // recommend asserting get-vote block field matches the mining block number
+
+// docs(tests): recommend 10-voter stress test in single mineBlock call
