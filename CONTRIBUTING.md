@@ -32,3 +32,5 @@ cd frontend && npx eslint . --ext .ts,.tsx
 ```bash
 cd frontend && npx tsc --noEmit
 ```
+
+<!-- batch 10 pass -->
