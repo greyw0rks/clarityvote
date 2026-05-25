@@ -387,3 +387,10 @@ export interface Crumb10 {
   href?: string;
   active?: boolean;
 }
+
+/** Generic async state wrapper. (batch 11) */
+export interface AsyncState11<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
