@@ -381,3 +381,7 @@ export function yesPctDisplay11(yes: bigint, total: bigint): string {
 export function clamp11(n: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, n));
 }
+
+/** Sleep for ms milliseconds. (batch 11) */
+export const delay11 = (ms: number): Promise<void> =>
+  new Promise(resolve => setTimeout(resolve, ms));
