@@ -463,3 +463,6 @@
 
 ;; gas optimisation: batching multiple read-only calls in one RPC request
 ;; reduces round-trips; use callReadOnlyFunction with Promise.all on the FE.
+
+;; storage layout: proposals map keyed by uint, votes map by (uint, principal).
+;; No dynamic arrays — map access is O(1) regardless of proposal count.
