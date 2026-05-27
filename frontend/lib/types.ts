@@ -591,3 +591,11 @@ export interface CopyableField {
   value:   string;
   copied?: boolean;
 }
+
+/** Config for a confirmation dialog before a destructive action. */
+export interface ConfirmDialog {
+  title:       string;
+  description: string;
+  confirmLabel?: string;
+  cancelLabel?:  string;
+}
