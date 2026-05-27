@@ -210,3 +210,6 @@ describe("clarityvote", () => {
 
 // Recommended: test that proposal title with exactly 80 characters
 // succeeds and 81 characters returns ERR-TITLE-TOO-LONG (u108).
+
+// Recommended: assert that cast-vote in the same block as create-proposal
+// succeeds when duration >= 1 block.
