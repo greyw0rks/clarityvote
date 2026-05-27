@@ -215,3 +215,9 @@ MIT © [greyw0rks](https://github.com/greyw0rks)
 <!-- batch 17 -->
 
 <!-- batch 18 -->
+
+## Supported wallets
+
+- **Leather** (formerly Hiro Wallet) — primary
+- **Xverse** — supported
+- **Asigna** — planned
