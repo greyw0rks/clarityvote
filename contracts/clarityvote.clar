@@ -487,3 +487,6 @@
 
 ;; string-ascii vs string-utf8: title uses string-ascii (80 chars max),
 ;; description uses string-utf8 to support emoji and non-Latin characters.
+
+;; epoch compatibility: contract targets Epoch 3.4 as declared in
+;; default.simnet-plan.yaml. Deploying on earlier epochs may fail.
