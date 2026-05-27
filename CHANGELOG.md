@@ -102,3 +102,11 @@
 - feat: .share-strip, .steps timeline, .toast CSS components
 - feat(vercel): /vote/:id redirect
 - docs(contract): post-deploy checklist, indexer guidance, quorum u1 note
+
+## [2026-05-27] — batch 19
+- feat: fmtNumber, yesGradientColor, txUrl, majorityLabel utils
+- feat: NetworkStatus, WalletProvider, ExplorerRef types
+- feat: NETWORK_COLORS, WALLET_COLORS token maps; WALLET_PROVIDERS list
+- feat: .modal, .wallet-btn, .network-badge CSS components
+- docs(contract): batched reads, 128-bit safety, reentrancy protection
+- docs(readme): supported wallets section
