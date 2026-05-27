@@ -599,3 +599,10 @@ export interface ConfirmDialog {
   confirmLabel?: string;
   cancelLabel?:  string;
 }
+
+/** Time-formatted block info shown in proposal metadata. */
+export interface BlockInfo {
+  blockHeight: number;
+  estimated:   string;
+  blocksLeft:  number;
+}
