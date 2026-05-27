@@ -292,3 +292,10 @@ export const HOVER = {
   red:    { borderColor: '#3A1E1E', color: '#F06060', background: 'rgba(240,96,96,.07)' },
   subtle: { borderColor: '#2A4230', color: '#D8EAD8' },
 } as const;
+
+/** Consistent disabled state style. */
+export const DISABLED_STYLE = {
+  opacity: 0.45,
+  cursor:  'not-allowed',
+  pointerEvents: 'none' as const,
+} as const;
