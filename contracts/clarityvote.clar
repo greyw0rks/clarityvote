@@ -469,3 +469,6 @@
 
 ;; overflow safety: Clarity integers are 128-bit and do not overflow silently.
 ;; Arithmetic on totalPower is safe up to ~3.4 × 10^38 microSTX.
+
+;; reentrancy: Clarity has no reentrancy — contracts cannot call back into
+;; themselves mid-execution. No reentrancy guard needed.
