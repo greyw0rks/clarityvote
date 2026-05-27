@@ -550,3 +550,41 @@ select option { background: var(--s2); }
   text-decoration: none;
 }
 .share-btn:hover { border-color: var(--bdh); color: var(--tx); }
+
+/* ── Timeline / step indicator ───────────────────────────────── */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.step {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 20px;
+  position: relative;
+}
+.step::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 28px;
+  bottom: 0;
+  width: 1px;
+  background: var(--bdr);
+}
+.step:last-child::before { display: none; }
+.step-dot {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--s2);
+  border: 1px solid var(--bdh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--mu);
+  font-family: 'DM Mono', monospace;
+}
+.step-dot.done { background: var(--gg); border-color: var(--g); color: var(--g); }
