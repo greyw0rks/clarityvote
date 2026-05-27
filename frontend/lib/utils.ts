@@ -538,3 +538,10 @@ export function fmtNumber(n: number): string {
   if (n >= 1_000)     return `${(n / 1_000).toFixed(0)}K`;
   return String(n);
 }
+
+/** Returns a colour string based on yes-vote percentage (green → red). */
+export function yesGradientColor(yesPct: number): string {
+  if (yesPct >= 66) return '#00D87C';
+  if (yesPct >= 50) return '#E8A830';
+  return '#F06060';
+}
