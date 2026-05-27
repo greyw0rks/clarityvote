@@ -277,3 +277,11 @@ export const NETWORK_COLORS = {
   mainnet: { bg: 'rgba(0,216,124,.09)', fg: '#00D87C', label: 'Mainnet' },
   testnet: { bg: 'rgba(232,168,48,.07)', fg: '#E8A830', label: 'Testnet' },
 } as const;
+
+/** Wallet provider brand colours for connect modal. */
+export const WALLET_COLORS: Record<string, string> = {
+  leather: '#FF5500',
+  xverse:  '#7B3FE4',
+  asigna:  '#00C8A0',
+  okx:     '#FFFFFF',
+};
