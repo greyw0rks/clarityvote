@@ -588,3 +588,21 @@ select option { background: var(--s2); }
   font-family: 'DM Mono', monospace;
 }
 .step-dot.done { background: var(--gg); border-color: var(--g); color: var(--g); }
+
+/* ── Toast notification ──────────────────────────────────────── */
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--s1);
+  border: 1px solid var(--bdh);
+  border-radius: var(--rl);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  min-width: 280px;
+  max-width: 400px;
+  font-size: 14px;
+}
+.toast.success { border-left: 3px solid var(--g);    }
+.toast.error   { border-left: 3px solid var(--red);  }
+.toast.info    { border-left: 3px solid var(--mu);   }
