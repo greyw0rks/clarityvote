@@ -176,3 +176,10 @@ export const BLOCKS_PER_MONTH_17 = 4320;
 export const TWITTER_SHARE = 'https://twitter.com/intent/tweet?text=';
 /** Warpcast share intent base URL. */
 export const WARPCAST_SHARE = 'https://warpcast.com/~/compose?text=';
+
+/** Supported wallet providers with display metadata. */
+export const WALLET_PROVIDERS = [
+  { id: 'leather', name: 'Leather',  icon: '🟧' },
+  { id: 'xverse',  name: 'Xverse',   icon: '🟣' },
+  { id: 'asigna',  name: 'Asigna',   icon: '🟢' },
+] as const;
