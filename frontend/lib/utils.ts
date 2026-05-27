@@ -505,3 +505,12 @@ export function clamp17(n: number, lo: number, hi: number): number {
 /** Sleep for ms milliseconds. (batch 17) */
 export const delay17 = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
+
+/** Returns a proposal's remaining time as a human-readable string. */
+export function remainingTime(blocksLeft: number): string {
+  if (blocksLeft <= 0) return 'Ended';
+  const mins = blocksLeft * 10;
+  if (mins < 60) return `${mins} min`;
+  if (mins < 1440) return `${Math.round(mins / 60)} hr`;
+  return `${Math.round(mins / 1440)} day${Math.round(mins / 1440) !== 1 ? 's' : ''}`;
+}
