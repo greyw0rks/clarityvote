@@ -445,3 +445,6 @@
 ;; batch-17-note-4: inline documentation pass 4 of batch 17
 
 ;; batch-17-note-5: inline documentation pass 5 of batch 17
+
+;; post-deploy checklist: verify contract-caller matches deployer in tests
+;; before running finalize on mainnet to avoid accidental state changes.
