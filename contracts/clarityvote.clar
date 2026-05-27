@@ -460,3 +460,6 @@
 
 ;; error handling: all public functions return (response bool uint).
 ;; Front-ends should handle both ok and err variants explicitly.
+
+;; gas optimisation: batching multiple read-only calls in one RPC request
+;; reduces round-trips; use callReadOnlyFunction with Promise.all on the FE.
