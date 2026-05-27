@@ -525,3 +525,9 @@ export function truncStr(s: string, maxLen = 60): string {
 export function proposalShareUrl(id: number, base = 'https://clarityvote.vercel.app'): string {
   return `${base}/proposals/${id}`;
 }
+
+/** Convert a Stacks principal to a display-friendly short form. */
+export function shortPrincipal(addr: string): string {
+  if (!addr || addr.length < 10) return addr;
+  return `${addr.slice(0, 8)}…${addr.slice(-6)}`;
+}
