@@ -520,3 +520,8 @@ export function truncStr(s: string, maxLen = 60): string {
   if (s.length <= maxLen) return s;
   return s.slice(0, maxLen).trimEnd() + '…';
 }
+
+/** Returns a share URL for a proposal. */
+export function proposalShareUrl(id: number, base = 'https://clarityvote.vercel.app'): string {
+  return `${base}/proposals/${id}`;
+}
