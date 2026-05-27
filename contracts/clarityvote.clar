@@ -484,3 +484,6 @@
 
 ;; clarity check: run `clarinet check` before every deploy to catch
 ;; type errors, undefined references, and analysis failures early.
+
+;; string-ascii vs string-utf8: title uses string-ascii (80 chars max),
+;; description uses string-utf8 to support emoji and non-Latin characters.
