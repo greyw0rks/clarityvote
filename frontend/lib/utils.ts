@@ -569,3 +569,11 @@ export function addressInitials(addr: string): string {
 export function samePrincipal(a: string, b: string): boolean {
   return a.toLowerCase() === b.toLowerCase();
 }
+
+/** Format a vote count as a compact display string. */
+export function fmtVoteCount(count: bigint): string {
+  const n = Number(count) / 1e6;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M STX`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K STX`;
+  return `${n.toFixed(0)} STX`;
+}
