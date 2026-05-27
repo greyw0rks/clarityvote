@@ -481,3 +481,6 @@
 
 ;; principal formatting: Stacks mainnet principals start with SP,
 ;; testnet with ST. Contract will accept both — no network check on-chain.
+
+;; clarity check: run `clarinet check` before every deploy to catch
+;; type errors, undefined references, and analysis failures early.
