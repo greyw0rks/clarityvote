@@ -559,3 +559,11 @@ export interface SharePayload {
   url:         string;
   description: string;
 }
+
+/** On-chain vote receipt returned by get-vote. */
+export interface VoteReceipt {
+  choice:      1 | 2 | 3;
+  votingPower: bigint;
+  block:       number;
+  proposalId:  number;
+}
