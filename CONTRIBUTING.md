@@ -61,3 +61,12 @@ to post directly to Twitter/X or Warpcast.
 | Leather | ✅ Supported |
 | Xverse  | ✅ Supported |
 | Asigna  | 🔜 Planned  |
+
+## Clarity type reference
+
+| Field       | Clarity type     | Notes                    |
+|-------------|------------------|--------------------------|
+| title       | string-ascii 80  | max 80 ASCII chars       |
+| description | string-utf8      | supports emoji/Unicode   |
+| duration    | uint             | blocks from current height |
+| quorum      | uint             | minimum microSTX turnout |
