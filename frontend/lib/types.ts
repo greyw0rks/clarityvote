@@ -567,3 +567,10 @@ export interface VoteReceipt {
   block:       number;
   proposalId:  number;
 }
+
+/** Shape for a network status indicator. */
+export interface NetworkStatus {
+  network:      'mainnet' | 'testnet';
+  blockHeight:  number;
+  apiReachable: boolean;
+}
