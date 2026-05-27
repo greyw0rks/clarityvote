@@ -207,3 +207,6 @@ describe("clarityvote", () => {
 
 // Recommended: add a snapshot test that serialises get-proposal output
 // to JSON and diffs against a stored fixture on each CI run.
+
+// Recommended: test that proposal title with exactly 80 characters
+// succeeds and 81 characters returns ERR-TITLE-TOO-LONG (u108).
