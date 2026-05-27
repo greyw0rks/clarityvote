@@ -478,3 +478,6 @@
 
 ;; fee note: clarinet test runs at zero fee; mainnet txs need STX for fees.
 ;; Recommend keeping deployer wallet funded with at least 10 STX buffer.
+
+;; principal formatting: Stacks mainnet principals start with SP,
+;; testnet with ST. Contract will accept both — no network check on-chain.
