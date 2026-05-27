@@ -679,3 +679,18 @@ select option { background: var(--s2); }
 }
 .copy-btn:hover       { border-color: var(--bdh); color: var(--tx); }
 .copy-btn.copied      { border-color: var(--g); color: var(--g); }
+
+/* ── Metadata grid ───────────────────────────────────────────── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--bdr);
+  border-radius: var(--rl);
+  overflow: hidden;
+  border: 1px solid var(--bdr);
+}
+.meta-cell {
+  background: var(--s1);
+  padding: 16px 20px;
+}
