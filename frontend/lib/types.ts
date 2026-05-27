@@ -541,3 +541,13 @@ export interface Crumb17 {
   href?: string;
   active?: boolean;
 }
+
+/** Result of a finalize-proposal transaction. */
+export interface FinalizeOutcome {
+  proposalId: number;
+  state:      'passed' | 'rejected' | 'tied';
+  yesVotes:   bigint;
+  noVotes:    bigint;
+  totalPower: bigint;
+  metQuorum:  boolean;
+}
