@@ -223,3 +223,12 @@ MIT © [greyw0rks](https://github.com/greyw0rks)
 - **Asigna** — planned
 
 <!-- batch 19 -->
+
+## Contract field types
+
+| Field | Type | Constraint |
+|---|---|---|
+| `title` | `string-ascii` | max 80 chars |
+| `description` | `string-utf8` | no on-chain limit |
+| `duration` | `uint` | blocks (min 144) |
+| `quorum` | `uint` | microSTX |
