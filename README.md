@@ -232,3 +232,5 @@ MIT © [greyw0rks](https://github.com/greyw0rks)
 | `description` | `string-utf8` | no on-chain limit |
 | `duration` | `uint` | blocks (min 144) |
 | `quorum` | `uint` | microSTX |
+
+<!-- batch 20 -->
