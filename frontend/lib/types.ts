@@ -584,3 +584,10 @@ export interface ExplorerRef {
   url:   string;
   type:  'tx' | 'address' | 'contract';
 }
+
+/** Shape for a copyable field (address, tx ID, etc). */
+export interface CopyableField {
+  label:   string;
+  value:   string;
+  copied?: boolean;
+}
