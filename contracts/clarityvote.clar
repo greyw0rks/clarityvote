@@ -454,3 +454,6 @@
 
 ;; read-only purity: all get-* functions have no side effects and are
 ;; safe to call from any context, including other contracts.
+
+;; quorum floor: setting quorum to u1 (1 microSTX) effectively makes any
+;; single vote sufficient to meet quorum — useful for testing only.
