@@ -574,3 +574,6 @@ export interface NetworkStatus {
   blockHeight:  number;
   apiReachable: boolean;
 }
+
+/** Wallet provider options surfaced in connect modal. */
+export type WalletProvider = 'leather' | 'xverse' | 'asigna' | 'okx';
