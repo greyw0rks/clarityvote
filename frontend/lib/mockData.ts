@@ -171,3 +171,8 @@ export const BLOCKS_PER_MONTH_16 = 4320;
 
 /** Blocks per month estimate for batch 17. */
 export const BLOCKS_PER_MONTH_17 = 4320;
+
+/** Twitter/X share intent base URL. */
+export const TWITTER_SHARE = 'https://twitter.com/intent/tweet?text=';
+/** Warpcast share intent base URL. */
+export const WARPCAST_SHARE = 'https://warpcast.com/~/compose?text=';
