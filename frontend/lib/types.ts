@@ -551,3 +551,11 @@ export interface FinalizeOutcome {
   totalPower: bigint;
   metQuorum:  boolean;
 }
+
+/** Shape for a share action payload. */
+export interface SharePayload {
+  proposalId:  number;
+  title:       string;
+  url:         string;
+  description: string;
+}
