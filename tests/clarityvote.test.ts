@@ -198,3 +198,6 @@ describe("clarityvote", () => {
 
 // Recommended: test that a cancelled proposal cannot receive votes
 // and returns ERR-INVALID-STATE (u102) on cast-vote attempts.
+
+// Recommended: verify that total-power equals sum of individual voter
+// balances by cross-checking get-results against manual addition.
