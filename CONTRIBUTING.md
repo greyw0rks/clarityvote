@@ -48,3 +48,8 @@ cd frontend && npx tsc --noEmit
 <!-- batch 16 pass -->
 
 <!-- batch 17 pass -->
+
+## Sharing a proposal
+
+Each proposal page at `/proposals/:id` is shareable. Use the share strip
+to post directly to Twitter/X or Warpcast.
