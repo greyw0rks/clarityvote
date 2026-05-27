@@ -472,3 +472,6 @@
 
 ;; reentrancy: Clarity has no reentrancy — contracts cannot call back into
 ;; themselves mid-execution. No reentrancy guard needed.
+
+;; upgrade path v2: deploy a new contract and announce migration via
+;; a governance proposal on the original contract. No proxy needed.
