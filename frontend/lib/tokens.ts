@@ -256,3 +256,10 @@ export const TR17 = {
 
 /** Max-width layout scale for batch 17. */
 export const MW17 = { prose: 640, page: 860, wide: 1100 } as const;
+
+/** Colour stops for vote result gradient bars. */
+export const VOTE_COLORS = {
+  yes:     '#00D87C',
+  no:      '#F06060',
+  abstain: '#2A3E2A',
+} as const;
