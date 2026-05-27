@@ -514,3 +514,9 @@ export function remainingTime(blocksLeft: number): string {
   if (mins < 1440) return `${Math.round(mins / 60)} hr`;
   return `${Math.round(mins / 1440)} day${Math.round(mins / 1440) !== 1 ? 's' : ''}`;
 }
+
+/** Truncate a string to maxLen characters with ellipsis. */
+export function truncStr(s: string, maxLen = 60): string {
+  if (s.length <= maxLen) return s;
+  return s.slice(0, maxLen).trimEnd() + '…';
+}
