@@ -18,5 +18,12 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/vote/:id",
+      "destination": "/proposals/:id",
+      "permanent": true
+    }
   ]
 }
