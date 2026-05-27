@@ -457,3 +457,6 @@
 
 ;; quorum floor: setting quorum to u1 (1 microSTX) effectively makes any
 ;; single vote sufficient to meet quorum — useful for testing only.
+
+;; error handling: all public functions return (response bool uint).
+;; Front-ends should handle both ok and err variants explicitly.
