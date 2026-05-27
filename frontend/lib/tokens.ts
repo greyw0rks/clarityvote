@@ -263,3 +263,11 @@ export const VOTE_COLORS = {
   no:      '#F06060',
   abstain: '#2A3E2A',
 } as const;
+
+/** Palette for proposal state badges. */
+export const STATE_COLORS = {
+  active:   { bg: 'rgba(0,216,124,.09)',  fg: '#00D87C', border: '#1A3A26' },
+  passed:   { bg: 'rgba(0,200,100,.07)',  fg: '#00C87A', border: '#173222' },
+  rejected: { bg: 'rgba(240,96,96,.07)',  fg: '#F06060', border: '#3A1E1E' },
+  tied:     { bg: 'rgba(232,168,48,.07)', fg: '#E8A830', border: '#3A2E14' },
+} as const;
