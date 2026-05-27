@@ -694,3 +694,10 @@ select option { background: var(--s2); }
   background: var(--s1);
   padding: 16px 20px;
 }
+
+/* ── Transition: fade-in on mount ────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.fade-in { animation: fadeIn .3s ease forwards; }
