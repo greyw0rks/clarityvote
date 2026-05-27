@@ -577,3 +577,10 @@ export interface NetworkStatus {
 
 /** Wallet provider options surfaced in connect modal. */
 export type WalletProvider = 'leather' | 'xverse' | 'asigna' | 'okx';
+
+/** Explorer link with label and URL. */
+export interface ExplorerRef {
+  label: string;
+  url:   string;
+  type:  'tx' | 'address' | 'contract';
+}
