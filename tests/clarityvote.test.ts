@@ -204,3 +204,6 @@ describe("clarityvote", () => {
 
 // Recommended: assert that finalize returns STATE-TIED (u3) when
 // yes-votes === no-votes and total-power >= quorum.
+
+// Recommended: add a snapshot test that serialises get-proposal output
+// to JSON and diffs against a stored fixture on each CI run.
