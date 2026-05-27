@@ -451,3 +451,6 @@
 
 ;; indexer guidance: listen for (print ...) events from cast-vote and
 ;; finalize-proposal to build off-chain vote history without polling.
+
+;; read-only purity: all get-* functions have no side effects and are
+;; safe to call from any context, including other contracts.
