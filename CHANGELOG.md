@@ -110,3 +110,10 @@
 - feat: .modal, .wallet-btn, .network-badge CSS components
 - docs(contract): batched reads, 128-bit safety, reentrancy protection
 - docs(readme): supported wallets section
+
+## [2026-05-27] — batch 20
+- feat: addressInitials, samePrincipal, fmtVoteCount, quorumProgress utils
+- feat: CopyableField, ConfirmDialog, BlockInfo types
+- feat: HOVER, DISABLED_STYLE tokens; CLARINET_SDK_PKG constants
+- feat: .copy-btn, .meta-grid, .fade-in CSS utilities
+- docs(contract): fee buffer, epoch 3.4, string types, clarinet check
