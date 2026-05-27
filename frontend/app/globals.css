@@ -661,3 +661,21 @@ select option { background: var(--s2); }
 }
 .network-badge.mainnet { background: rgba(0,216,124,.09); color: #00D87C; border: 1px solid #1A3A26; }
 .network-badge.testnet { background: rgba(232,168,48,.07); color: #E8A830; border: 1px solid #3A2E14; }
+
+/* ── Copy button ─────────────────────────────────────────────── */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: var(--s2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--mu);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.copy-btn:hover       { border-color: var(--bdh); color: var(--tx); }
+.copy-btn.copied      { border-color: var(--g); color: var(--g); }
