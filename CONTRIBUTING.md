@@ -53,3 +53,11 @@ cd frontend && npx tsc --noEmit
 
 Each proposal page at `/proposals/:id` is shareable. Use the share strip
 to post directly to Twitter/X or Warpcast.
+
+## Supported wallets
+
+| Wallet  | Status      |
+|---------|-------------|
+| Leather | ✅ Supported |
+| Xverse  | ✅ Supported |
+| Asigna  | 🔜 Planned  |
