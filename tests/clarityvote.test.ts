@@ -219,3 +219,6 @@ describe("clarityvote", () => {
 
 // Recommended: test cancel-proposal with wallet_2 (non-proposer) to
 // confirm ERR-NOT-AUTHORIZED (u100) is returned correctly.
+
+// Recommended: run get-results immediately after create-proposal and
+// assert yes=0, no=0, abstain=0, total=0 as initial state.
