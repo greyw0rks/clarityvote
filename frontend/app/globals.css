@@ -606,3 +606,23 @@ select option { background: var(--s2); }
 .toast.success { border-left: 3px solid var(--g);    }
 .toast.error   { border-left: 3px solid var(--red);  }
 .toast.info    { border-left: 3px solid var(--mu);   }
+
+/* ── Connect wallet modal ────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(9,16,10,.85);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  background: var(--s1);
+  border: 1px solid var(--bdh);
+  border-radius: var(--rxl, 18px);
+  padding: 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+  animation: fadeUp .2s ease forwards;
+}
