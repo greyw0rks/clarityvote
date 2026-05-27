@@ -285,3 +285,10 @@ export const WALLET_COLORS: Record<string, string> = {
   asigna:  '#00C8A0',
   okx:     '#FFFFFF',
 };
+
+/** Consistent hover state style objects for buttons. */
+export const HOVER = {
+  green:  { borderColor: '#2A4230', color: '#00D87C', background: 'rgba(0,216,124,.09)' },
+  red:    { borderColor: '#3A1E1E', color: '#F06060', background: 'rgba(240,96,96,.07)' },
+  subtle: { borderColor: '#2A4230', color: '#D8EAD8' },
+} as const;
