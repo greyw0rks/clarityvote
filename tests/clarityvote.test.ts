@@ -201,3 +201,6 @@ describe("clarityvote", () => {
 
 // Recommended: verify that total-power equals sum of individual voter
 // balances by cross-checking get-results against manual addition.
+
+// Recommended: assert that finalize returns STATE-TIED (u3) when
+// yes-votes === no-votes and total-power >= quorum.
