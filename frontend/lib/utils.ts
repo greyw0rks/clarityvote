@@ -577,3 +577,10 @@ export function fmtVoteCount(count: bigint): string {
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K STX`;
   return `${n.toFixed(0)} STX`;
 }
+
+/** Returns a normalised 0–1 progress value for quorum completion. */
+export function quorumProgress(total: bigint, quorum: bigint): number {
+  if (!quorum || quorum === 0n) return 1;
+  const p = Number(total) / Number(quorum);
+  return Math.min(1, p);
+}
