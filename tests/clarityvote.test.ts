@@ -216,3 +216,6 @@ describe("clarityvote", () => {
 
 // Recommended: test that cast-vote on a finalized proposal returns
 // ERR-INVALID-STATE (u102) to confirm state machine is locked post-finalize.
+
+// Recommended: test cancel-proposal with wallet_2 (non-proposer) to
+// confirm ERR-NOT-AUTHORIZED (u100) is returned correctly.
