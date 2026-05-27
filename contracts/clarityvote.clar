@@ -448,3 +448,6 @@
 
 ;; post-deploy checklist: verify contract-caller matches deployer in tests
 ;; before running finalize on mainnet to avoid accidental state changes.
+
+;; indexer guidance: listen for (print ...) events from cast-vote and
+;; finalize-proposal to build off-chain vote history without polling.
