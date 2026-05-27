@@ -558,3 +558,9 @@ export function majorityLabel(yes: bigint, no: bigint): 'Yes' | 'No' | 'Tie' {
   if (no > yes) return 'No';
   return 'Tie';
 }
+
+/** Returns initials from a Stacks address for avatar display. */
+export function addressInitials(addr: string): string {
+  if (!addr || addr.length < 4) return '??';
+  return addr.slice(0, 2).toUpperCase();
+}
