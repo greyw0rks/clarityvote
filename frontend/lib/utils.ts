@@ -564,3 +564,8 @@ export function addressInitials(addr: string): string {
   if (!addr || addr.length < 4) return '??';
   return addr.slice(0, 2).toUpperCase();
 }
+
+/** Returns true if two principals are equal (case-insensitive). */
+export function samePrincipal(a: string, b: string): boolean {
+  return a.toLowerCase() === b.toLowerCase();
+}
