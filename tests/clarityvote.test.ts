@@ -213,3 +213,6 @@ describe("clarityvote", () => {
 
 // Recommended: assert that cast-vote in the same block as create-proposal
 // succeeds when duration >= 1 block.
+
+// Recommended: test that cast-vote on a finalized proposal returns
+// ERR-INVALID-STATE (u102) to confirm state machine is locked post-finalize.
