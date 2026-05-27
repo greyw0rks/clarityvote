@@ -545,3 +545,9 @@ export function yesGradientColor(yesPct: number): string {
   if (yesPct >= 50) return '#E8A830';
   return '#F06060';
 }
+
+/** Build a Hiro explorer URL for a tx ID. */
+export function txUrl(txId: string, mainnet = false): string {
+  const chain = mainnet ? '' : '?chain=testnet';
+  return `https://explorer.hiro.so/txid/${txId}${chain}`;
+}
