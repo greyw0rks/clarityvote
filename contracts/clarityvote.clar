@@ -475,3 +475,6 @@
 
 ;; upgrade path v2: deploy a new contract and announce migration via
 ;; a governance proposal on the original contract. No proxy needed.
+
+;; fee note: clarinet test runs at zero fee; mainnet txs need STX for fees.
+;; Recommend keeping deployer wallet funded with at least 10 STX buffer.
