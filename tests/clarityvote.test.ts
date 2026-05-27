@@ -195,3 +195,6 @@ describe("clarityvote", () => {
 // batch-17-coverage-7: additional test coverage target
 
 // batch-17-coverage-8: additional test coverage target
+
+// Recommended: test that a cancelled proposal cannot receive votes
+// and returns ERR-INVALID-STATE (u102) on cast-vote attempts.
