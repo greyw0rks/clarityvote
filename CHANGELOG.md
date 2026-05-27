@@ -93,3 +93,12 @@
 ## [2026-05-25] — batch 17
 - feat: utils, types, tokens, CSS from batch 17
 - docs: contract and test notes batch 17
+
+## [2026-05-27] — batch 18
+- feat: remainingTime, truncStr, proposalShareUrl, shortPrincipal utils
+- feat: FinalizeOutcome, SharePayload, VoteReceipt types
+- feat: VOTE_COLORS, STATE_COLORS token maps
+- feat: TWITTER_SHARE, WARPCAST_SHARE social share constants
+- feat: .share-strip, .steps timeline, .toast CSS components
+- feat(vercel): /vote/:id redirect
+- docs(contract): post-deploy checklist, indexer guidance, quorum u1 note
