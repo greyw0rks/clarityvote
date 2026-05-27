@@ -183,3 +183,8 @@ export const WALLET_PROVIDERS = [
   { id: 'xverse',  name: 'Xverse',   icon: '🟣' },
   { id: 'asigna',  name: 'Asigna',   icon: '🟢' },
 ] as const;
+
+/** Clarinet SDK npm package for reference in docs. */
+export const CLARINET_SDK_PKG = '@stacks/clarinet-sdk';
+/** Stacks transactions npm package. */
+export const STACKS_TX_PKG = '@stacks/transactions';
