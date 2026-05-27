@@ -271,3 +271,9 @@ export const STATE_COLORS = {
   rejected: { bg: 'rgba(240,96,96,.07)',  fg: '#F06060', border: '#3A1E1E' },
   tied:     { bg: 'rgba(232,168,48,.07)', fg: '#E8A830', border: '#3A2E14' },
 } as const;
+
+/** Colours for network badge indicators. */
+export const NETWORK_COLORS = {
+  mainnet: { bg: 'rgba(0,216,124,.09)', fg: '#00D87C', label: 'Mainnet' },
+  testnet: { bg: 'rgba(232,168,48,.07)', fg: '#E8A830', label: 'Testnet' },
+} as const;
