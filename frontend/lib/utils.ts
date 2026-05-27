@@ -551,3 +551,10 @@ export function txUrl(txId: string, mainnet = false): string {
   const chain = mainnet ? '' : '?chain=testnet';
   return `https://explorer.hiro.so/txid/${txId}${chain}`;
 }
+
+/** Returns the majority vote label for a finalised proposal. */
+export function majorityLabel(yes: bigint, no: bigint): 'Yes' | 'No' | 'Tie' {
+  if (yes > no) return 'Yes';
+  if (no > yes) return 'No';
+  return 'Tie';
+}
