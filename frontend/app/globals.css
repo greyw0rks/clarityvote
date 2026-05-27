@@ -526,3 +526,27 @@ select option { background: var(--s2); }
   padding: 2px 8px; background: var(--s2); border: 1px solid var(--bdr);
   border-radius: 4px; font-size: 11px; color: var(--mu);
 }
+
+/* ── Share button strip ──────────────────────────────────────── */
+.share-strip {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--bdr);
+  background: var(--s2);
+  color: var(--mu);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  text-decoration: none;
+}
+.share-btn:hover { border-color: var(--bdh); color: var(--tx); }
