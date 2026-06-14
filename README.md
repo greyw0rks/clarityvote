@@ -1,236 +1,182 @@
-# ClarityVote 🗳️
+# ClarityVote
 
-**On-chain governance for Stacks communities**
-
----
-
-ClarityVote lets any Stacks community create proposals and vote on them fully on-chain. Voting power is weighted by live STX balance — no token to deploy, no snapshot service, no admin key. One contract, one source of truth.
+On-chain governance for the Stacks ecosystem. STX-balance-weighted voting with delegation, timelocked execution, and a fully transparent proposal lifecycle — all enforced by Clarity smart contracts.
 
 ---
 
-## How it works
+## Overview
+
+ClarityVote gives STX holders direct governance power. Every vote is weighted by real STX balance, every passed proposal is delayed before execution, and every delegation is revocable at any time. No trusted multisig, no off-chain coordination — governance lives entirely on-chain.
+
+**Contracts:**
+
+| Contract | Purpose |
+|---|---|
+| `clarityvote` | Core proposal and voting logic |
+| `clarityvote-delegation` | Delegate voting weight to another principal |
+| `clarityvote-timelock` | Enforce execution delay on passed proposals |
+
+**Deployer:** `SP1SY1E599GN04XRD2DQBKV7E62HYBJR2CT9S5QKK`  
+**Network:** Stacks Mainnet  
+**Clarity Version:** v3 (Epoch 3.1)
+
+---
+
+## How It Works
+
+### Voting Weight
+
+Each voter's weight is their STX balance at time of vote. No snapshot oracle, no token wrapping — Clarity reads balances natively.
+
+With delegation active, effective weight = own balance + delegated weight from all delegators.
+
+### Proposal Lifecycle
 
 ```
-create-proposal(title, description, duration, quorum)
-        │
-  [voting window open]
-        │
-   cast-vote(YES=1 / NO=2 / ABSTAIN=3)
-   power = tx-sender's STX balance at vote time
-        │
-  [window closes at end-block]
-        │
-   finalize-proposal()   ← anyone can call
-        │
-        ├─ PASSED    yes > no  AND  total ≥ quorum
-        ├─ REJECTED  no ≥ yes  OR   quorum not met
-        └─ TIED      yes == no AND  quorum met
+CREATED → ACTIVE (voting open) → PASSED / FAILED → QUEUED (timelock) → EXECUTED
+                                                                      ↘ CANCELLED
+```
+
+1. Any STX holder creates a proposal with a description and voting window
+2. Voters cast yes/no during the active window
+3. Proposal passes if yes-weight exceeds no-weight and meets quorum
+4. Passed proposals are queued in the timelock contract
+5. After the delay elapses, the proposal can be executed
+
+### Delegation
+
+STX holders can delegate their full voting weight to another principal.
+
+- One active delegation per address at a time
+- Delegation is revocable or transferable at any time
+- Circular delegation is rejected on-chain
+- Delegatee accumulates weight from all delegators automatically
+
+### Timelock
+
+Passed proposals cannot execute immediately. A mandatory delay (default: 144 burn blocks, ~1 Bitcoin day) must elapse.
+
+- Configurable delay: 1 to 1008 burn blocks
+- Grace period: 288 burn blocks after ETA before proposal expires
+- Admin can cancel a queued proposal before execution
+
+---
+
+## Contract Reference
+
+### `clarityvote-delegation`
+
+```clarity
+;; Delegate your voting weight
+(delegate (delegatee principal))
+
+;; Revoke your delegation
+(revoke-delegation)
+
+;; Move delegation to a new address atomically
+(transfer-delegation (new-delegatee principal))
+
+;; Read effective weight (own balance + delegated)
+(get-effective-weight (voter principal))
+
+;; Check if an address has delegated
+(has-delegated (delegator principal))
+```
+
+### `clarityvote-timelock`
+
+```clarity
+;; Queue a passed proposal (admin/governance contract only)
+(queue-proposal (proposal-id uint) (description (string-utf8 256)))
+;; Returns: (ok eta-block)
+
+;; Execute after delay
+(execute-proposal (proposal-id uint))
+
+;; Cancel before execution
+(cancel-proposal (proposal-id uint))
+
+;; Update delay (1–1008 burn blocks)
+(set-delay (new-delay uint))
+
+;; Check readiness
+(is-ready (proposal-id uint))     ;; delay met, not expired
+(is-expired (proposal-id uint))   ;; grace period passed
+(blocks-until-eta (proposal-id uint))
 ```
 
 ---
 
-## Contract functions
+## Error Codes
 
-| Function | Caller | Description |
-|---|---|---|
-| `create-proposal` | Anyone | Opens a new voting window |
-| `cast-vote` | Any STX holder | Votes YES / NO / ABSTAIN (once per wallet) |
-| `finalize-proposal` | Anyone | Records result after window closes |
-| `cancel-proposal` | Proposer | Cancels before any votes are cast |
-| `get-proposal` | Read-only | Fetch full proposal data |
-| `get-vote` | Read-only | Fetch a specific voter's record |
-| `get-results` | Read-only | Live tally with quorum status |
-| `has-voted` | Read-only | Check if a principal has voted |
-
----
-
-## Error codes
+### Delegation
 
 | Code | Meaning |
 |---|---|
 | `u100` | Not authorized |
-| `u101` | Proposal not found |
-| `u102` | Invalid state |
-| `u103` | Already voted |
-| `u104` | Window closed |
-| `u105` | Window still open |
-| `u106` | Zero amount or empty title |
-| `u107` | Invalid vote choice |
-| `u108` | Title too long (max 80 chars) |
+| `u101` | Cannot delegate to self |
+| `u102` | Already have an active delegation |
+| `u103` | No delegation found to revoke |
+| `u104` | Would create circular delegation |
+| `u105` | Delegator has zero STX balance |
 
----
+### Timelock
 
-## Block timing
-
-Stacks produces ~144 blocks per day (~10 min/block).
-
-| Duration | Blocks |
+| Code | Meaning |
 |---|---|
-| 1 day | 144 |
-| 3 days | 432 |
-| 1 week | 1,008 |
-| 2 weeks | 2,016 |
+| `u100` | Not authorized |
+| `u101` | Proposal already queued |
+| `u102` | Proposal not found |
+| `u103` | Delay not yet met |
+| `u104` | Already executed |
+| `u105` | Proposal expired (grace period elapsed) |
+| `u106` | Invalid delay value |
+| `u107` | Proposal was cancelled |
 
 ---
 
-## Setup
+## Development
 
-### Prerequisites
-
-- [Clarinet](https://github.com/hirosystems/clarinet) — contract testing
-- Node.js 18+ — frontend
-
-### Contract tests
+**Requirements:** [Clarinet](https://github.com/hirosystems/clarinet) ≥ 2.0
 
 ```bash
+# Clone and install
+git clone https://github.com/greyw0rks/clarityvote
+cd clarityvote
+clarinet check
+
+# Run tests
 clarinet test
+
+# Deploy to testnet
+clarinet deployments apply --devnet
 ```
 
-### Frontend
-
-```bash
-cd frontend
-cp .env.example .env.local
-# fill in NEXT_PUBLIC_CONTRACT_ADDRESS and NEXT_PUBLIC_NETWORK
-npm install
-npm run dev
+**Project structure:**
 ```
-
-### Environment variables
-
-```env
-NEXT_PUBLIC_NETWORK=testnet
-NEXT_PUBLIC_CONTRACT_ADDRESS=ST...
-```
-
-### Deploy to mainnet
-
-```bash
-# Encrypt your mnemonic first — never commit plaintext seed phrases
-clarinet deployments encrypt
-
-# Then deploy
-clarinet deployments apply --mainnet
+contracts/
+  clarityvote.clar
+  clarityvote-delegation.clar
+  clarityvote-timelock.clar
+tests/
+  clarityvote_test.ts
+  delegation_test.ts
+  timelock_test.ts
+Clarinet.toml
 ```
 
 ---
 
-## Frontend stack
+## Security
 
-- **Next.js 16** — app router
-- **@stacks/connect** — wallet auth
-- **@stacks/transactions** — contract calls
-- **TypeScript** — end to end
-
-Pages:
-
-| Route | Description |
-|---|---|
-| `/` | Hero, stats, active proposals |
-| `/proposals` | Full list with filter + search |
-| `/proposals/[id]` | Detail, vote buttons, results |
-| `/proposals/new` | Create proposal form |
-
----
-
-## Project structure
-
-```
-Clarityvote/
-├── contracts/
-│   └── clarityvote.clar       # Clarity smart contract
-├── tests/
-│   └── clarityvote.test.ts    # Vitest + clarinet-sdk tests
-├── frontend/
-│   ├── app/                   # Next.js app router pages
-│   ├── components/            # Badge, VoteBar, ProposalCard…
-│   ├── lib/
-│   │   ├── contract.ts        # Read-only + tx builders
-│   │   ├── store.tsx          # React context (global state)
-│   │   ├── types.ts           # Shared TypeScript interfaces
-│   │   ├── tokens.ts          # Design tokens
-│   │   ├── utils.ts           # toSTX, pct, t2blocks…
-│   │   └── mockData.ts        # Seed proposals for dev
-│   └── .env.example
-├── Mainnet.toml
-├── vitest.config.ts
-└── README.md
-```
-
----
-
-## Roadmap
-
-- [ ] Real wallet integration (`@stacks/connect` → `store.tsx`)
-- [ ] Delegation — assign voting power to another address
-- [ ] BNS-gated proposals — only `.btc` names can create
-- [ ] Proposal categories and tags
-- [ ] Webhook / email notifications on finalization
-- [ ] Multi-choice voting beyond YES / NO / ABSTAIN
+- All state transitions validated on-chain; no off-chain reliance
+- `burn-block-height` used throughout for Bitcoin-anchored timing
+- Delegation weight is based on live STX balance — no gaming via balance snapshots
+- Timelock delay prevents governance attacks requiring instant execution
+- Circular delegation rejected at the contract level
 
 ---
 
 ## License
 
-MIT © [greyw0rks](https://github.com/greyw0rks)
-
-<!-- last updated by commit script -->
-
-<!-- batch 8 -->
-
-<!-- batch 9 -->
-
-<!-- batch 10 -->
-
-<!-- batch 11 -->
-
-<!-- batch 12 -->
-
-<!-- batch 13 -->
-
-<!-- batch 14 -->
-
-<!-- batch 15 -->
-
-<!-- batch 16 -->
-
-<!-- batch 17 -->
-
-<!-- batch 8 -->
-
-<!-- batch 10 -->
-
-<!-- batch 11 -->
-
-<!-- batch 12 -->
-
-<!-- batch 13 -->
-
-<!-- batch 14 -->
-
-<!-- batch 15 -->
-
-<!-- batch 16 -->
-
-<!-- batch 17 -->
-
-<!-- batch 18 -->
-
-## Supported wallets
-
-- **Leather** (formerly Hiro Wallet) — primary
-- **Xverse** — supported
-- **Asigna** — planned
-
-<!-- batch 19 -->
-
-## Contract field types
-
-| Field | Type | Constraint |
-|---|---|---|
-| `title` | `string-ascii` | max 80 chars |
-| `description` | `string-utf8` | no on-chain limit |
-| `duration` | `uint` | blocks (min 144) |
-| `quorum` | `uint` | microSTX |
-
-<!-- batch 20 -->
+MIT

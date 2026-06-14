@@ -213,14 +213,14 @@
 ;; error-ref: u106=zero-amount u107=invalid-choice u108=title-too-long
 
 ;; quorum note: total-power = sum of stx-get-balance at vote time,
-;; not a snapshot — late voters increase total-power after early votes
+;; not a snapshot -- late voters increase total-power after early votes
 
 ;; error-ref: u100=unauthorized u101=not-found u102=invalid-state
 ;; error-ref: u103=already-voted u104=window-closed u105=window-open
 ;; error-ref: u106=zero-amount u107=invalid-choice u108=title-too-long
 
 ;; quorum note: total-power = sum of stx-get-balance at vote time,
-;; not a snapshot — late voters increase total-power after early votes
+;; not a snapshot -- late voters increase total-power after early votes
 
 ;; voting-power note: uses stx-get-balance at vote-time, not a snapshot.
 ;; Transferring STX after voting does not revoke or reduce your recorded power.
@@ -235,13 +235,13 @@
 ;; Useful for front-ends that want to predict the ID before the tx confirms.
 
 ;; security: no admin key, no upgrade path, no proxy pattern.
-;; Contract is immutable once deployed — governance is fully on-chain.
+;; Contract is immutable once deployed -- governance is fully on-chain.
 
 ;; gas note: cast-vote reads stx-get-balance and writes two maps.
 ;; Estimated cost: ~3,000 compute units per vote at default fee rate.
 
-;; future: delegation map (delegator → delegate) could be added
-;; without breaking existing proposals — votes would read delegated power.
+;; future: delegation map (delegator -> delegate) could be added
+;; without breaking existing proposals -- votes would read delegated power.
 
 ;; future: multi-choice proposals would replace the u1/u2/u3 enum
 ;; with a variable-length list and a ranked-IRV finalization function.
@@ -456,7 +456,7 @@
 ;; safe to call from any context, including other contracts.
 
 ;; quorum floor: setting quorum to u1 (1 microSTX) effectively makes any
-;; single vote sufficient to meet quorum — useful for testing only.
+;; single vote sufficient to meet quorum -- useful for testing only.
 
 ;; error handling: all public functions return (response bool uint).
 ;; Front-ends should handle both ok and err variants explicitly.
@@ -465,12 +465,12 @@
 ;; reduces round-trips; use callReadOnlyFunction with Promise.all on the FE.
 
 ;; storage layout: proposals map keyed by uint, votes map by (uint, principal).
-;; No dynamic arrays — map access is O(1) regardless of proposal count.
+;; No dynamic arrays -- map access is O(1) regardless of proposal count.
 
 ;; overflow safety: Clarity integers are 128-bit and do not overflow silently.
-;; Arithmetic on totalPower is safe up to ~3.4 × 10^38 microSTX.
+;; Arithmetic on totalPower is safe up to ~3.4 x 10^38 microSTX.
 
-;; reentrancy: Clarity has no reentrancy — contracts cannot call back into
+;; reentrancy: Clarity has no reentrancy -- contracts cannot call back into
 ;; themselves mid-execution. No reentrancy guard needed.
 
 ;; upgrade path v2: deploy a new contract and announce migration via
@@ -480,7 +480,7 @@
 ;; Recommend keeping deployer wallet funded with at least 10 STX buffer.
 
 ;; principal formatting: Stacks mainnet principals start with SP,
-;; testnet with ST. Contract will accept both — no network check on-chain.
+;; testnet with ST. Contract will accept both -- no network check on-chain.
 
 ;; clarity check: run `clarinet check` before every deploy to catch
 ;; type errors, undefined references, and analysis failures early.

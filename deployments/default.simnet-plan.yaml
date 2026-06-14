@@ -67,4 +67,14 @@ plan:
       emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
       path: contracts/clarityvote.clar
       clarity-version: 2
+    - transaction-type: emulated-contract-publish
+      contract-name: clarityvote-delegation
+      emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+      path: contracts/clarityvote-delegation.clar
+      clarity-version: 2
+    - transaction-type: emulated-contract-publish
+      contract-name: clarityvote-timelock
+      emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+      path: contracts/clarityvote-timelock.clar
+      clarity-version: 2
     epoch: '3.4'
