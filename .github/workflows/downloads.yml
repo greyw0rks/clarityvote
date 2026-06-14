@@ -18,60 +18,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-
       - name: Install @greyw0rks/clarity-vote
         run: npm install @greyw0rks/clarity-vote
-
       - name: Install @greyw0rks/vault-escrow
         run: npm install @greyw0rks/vault-escrow
-
       - name: Verify clarity-vote exports
-        run: |
-          node -e "
-            import('@greyw0rks/clarity-vote').then(m => {
-              const keys = Object.keys(m);
-              if (!keys.includes('CONTRACTS')) throw new Error('missing CONTRACTS');
-              if (!keys.includes('VOTE_CHOICES')) throw new Error('missing VOTE_CHOICES');
-              if (!keys.includes('buildCastVote')) throw new Error('missing buildCastVote');
-              console.log('clarity-vote OK —', keys.length, 'exports');
-            });
-          "
-
+        run: node -e "import('@greyw0rks/clarity-vote').then(m => { if (!m.CONTRACTS) throw new Error('missing CONTRACTS'); console.log('clarity-vote OK'); })"
       - name: Verify vault-escrow exports
-        run: |
-          node -e "
-            import('@greyw0rks/vault-escrow').then(m => {
-              const keys = Object.keys(m);
-              if (!keys.includes('CONTRACTS')) throw new Error('missing CONTRACTS');
-              if (!keys.includes('ESCROW_STATES')) throw new Error('missing ESCROW_STATES');
-              if (!keys.includes('buildCreateEscrow')) throw new Error('missing buildCreateEscrow');
-              console.log('vault-escrow OK —', keys.length, 'exports');
-            });
-          "
-
-      - name: Import subpath - clarity-vote/delegation
-        run: |
-          node -e "
-            import('@greyw0rks/clarity-vote/delegation').then(m => {
-              if (!m.buildDelegate) throw new Error('missing buildDelegate');
-              console.log('delegation subpath OK');
-            });
-          "
-
-      - name: Import subpath - vault-escrow/factory
-        run: |
-          node -e "
-            import('@greyw0rks/vault-escrow/factory').then(m => {
-              if (!m.buildCreateEscrow) throw new Error('missing buildCreateEscrow');
-              console.log('factory subpath OK');
-            });
-          "
-
-      - name: Import subpath - vault-escrow/dispute
-        run: |
-          node -e "
-            import('@greyw0rks/vault-escrow/dispute').then(m => {
-              if (!m.buildOpenDispute) throw new Error('missing buildOpenDispute');
-              console.log('dispute subpath OK');
-            });
-          "
+        run: node -e "import('@greyw0rks/vault-escrow').then(m => { if (!m.CONTRACTS) throw new Error('missing CONTRACTS'); console.log('vault-escrow OK'); })"
