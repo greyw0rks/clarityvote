@@ -18,11 +18,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Install @greyw0rks/clarity-vote
-        run: npm install @greyw0rks/clarity-vote
-      - name: Install @greyw0rks/vault-escrow
-        run: npm install @greyw0rks/vault-escrow
-      - name: Verify clarity-vote exports
-        run: node -e "import('@greyw0rks/clarity-vote').then(m => { if (!m.CONTRACTS) throw new Error('missing CONTRACTS'); console.log('clarity-vote OK'); })"
-      - name: Verify vault-escrow exports
-        run: node -e "import('@greyw0rks/vault-escrow').then(m => { if (!m.CONTRACTS) throw new Error('missing CONTRACTS'); console.log('vault-escrow OK'); })"
+      - name: Install package
+        run: npm i @greyw0rks/arcadia
