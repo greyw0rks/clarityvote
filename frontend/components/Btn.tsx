@@ -29,7 +29,7 @@ export function Btn({
   const base: CSSProperties = {
     border:       'none',
     borderRadius: 8,
-    fontFamily:   "'DM Sans', sans-serif",
+    fontFamily:   T.font,
     fontWeight:   600,
     cursor:       disabled ? 'not-allowed' : 'pointer',
     opacity:      disabled ? 0.45 : 1,

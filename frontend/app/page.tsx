@@ -39,7 +39,7 @@ export default function HomePage() {
           <button style={{
             background: T.g, color: '#041a10', border: 'none',
             padding: '13px 28px', borderRadius: 8, fontSize: 15,
-            fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 700, cursor: 'pointer', fontFamily: T.font,
           }}>
             View proposals →
           </button>
@@ -49,7 +49,7 @@ export default function HomePage() {
             background: 'transparent', color: T.mu,
             border: `1px solid ${T.bdr}`, padding: '13px 24px',
             borderRadius: 8, fontSize: 15, fontWeight: 500,
-            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            cursor: 'pointer', fontFamily: T.font,
           }}>
             New proposal
           </button>

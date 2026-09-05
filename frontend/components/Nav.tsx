@@ -36,7 +36,7 @@ export function Nav() {
         }}>
           <span style={{
             color: T.bg, fontWeight: 800, fontSize: 13,
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: T.mono,
           }}>V</span>
         </div>
         <span className="serif" style={{ fontSize: 16, fontWeight: 700, color: T.tx }}>
@@ -60,7 +60,7 @@ export function Nav() {
                 color:      active ? T.tx  : T.mu,
                 fontSize:   13,
                 fontWeight: 500,
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: T.font,
               }}
             >
               {label}
@@ -93,7 +93,7 @@ export function Nav() {
                 borderRadius: 6,
                 color:      T.mu,
                 fontSize:   13,
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: T.font,
                 cursor:     'pointer',
               }}
             >
@@ -111,7 +111,7 @@ export function Nav() {
               color:        T.bg,
               fontSize:     13,
               fontWeight:   700,
-              fontFamily:   "'DM Sans', sans-serif",
+              fontFamily:   T.font,
               cursor:       'pointer',
               marginLeft:   4,
             }}

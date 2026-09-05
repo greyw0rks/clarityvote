@@ -1,301 +1,65 @@
+/**
+ * ClarityVote design tokens.
+ *
+ * Archetype: technical-developer — cool-neutral foundation, one restrained
+ * accent, high text contrast, uniform subtle radii, functional motion only.
+ *
+ * Contrast against `bg` (#09090B), all AA or better for body text:
+ *   tx  #FAFAFA 19.1   mu  #A1A1AA 7.8   g #22C55E 8.7
+ *   red #F87171  7.2   gold #FBBF24 11.9
+ * The previous muted tone (#5A825A) sat at 4.4, which failed for small text —
+ * that is the main reason the neutrals moved off green.
+ */
 export const T = {
-  bg:  '#09100A', s1: '#101710', s2: '#161F16', s3: '#1C2A1C',
-  bdr: '#1F2E1F', bdh: '#2A4230',
-  g:   '#00D87C', gd: '#009E58', gg: 'rgba(0,216,124,.1)',
-  tx:  '#D8EAD8', mu: '#5A825A', sub: '#2A3E2A',
-  red: '#F06060', gold: '#E8A830',
+  // surfaces, darkest first
+  bg: '#09090B',
+  s1: '#131315',
+  s2: '#18181B',
+  s3: '#212124',
+
+  // borders
+  bdr: '#27272A',
+  bdh: '#3F3F46',
+
+  // accent — reserved for live state, vote affordances and value
+  g: '#22C55E',
+  gd: '#16A34A',
+  gg: 'rgba(34,197,94,0.10)',
+
+  // ink
+  tx: '#FAFAFA',
+  mu: '#A1A1AA',
+  sub: '#52525B',
+
+  // status
+  red: '#F87171',
+  gold: '#FBBF24',
+
+  // type — these are the three families globals.css actually loads
+  font: "'DM Sans', system-ui, sans-serif",
+  mono: "'DM Mono', ui-monospace, monospace",
+  display: "'Fraunces', Georgia, serif",
+
+  // shape and motion
+  r: 8,
+  rl: 12,
+  tr: 'all 160ms cubic-bezier(0.2, 0, 0.2, 1)',
 } as const;
 
+/**
+ * Proposal state chips. Each carries an icon as well as a colour so outcome is
+ * never signalled by hue alone.
+ */
 export const BADGE_STYLES: Record<string, { bg: string; color: string; border: string }> = {
-  active:   { bg: 'rgba(0,216,124,.09)',  color: T.g,       border: '#1A3A26' },
-  passed:   { bg: 'rgba(0,200,100,.07)',  color: '#00C87A', border: '#173222' },
-  rejected: { bg: 'rgba(240,96,96,.07)',  color: T.red,     border: '#3A1E1E' },
-  tied:     { bg: 'rgba(232,168,48,.07)', color: T.gold,    border: '#3A2E14' },
+  active: { bg: 'rgba(34,197,94,0.10)', color: T.g, border: '#1B4D2E' },
+  passed: { bg: 'rgba(34,197,94,0.07)', color: '#4ADE80', border: '#1B4D2E' },
+  rejected: { bg: 'rgba(248,113,113,0.08)', color: T.red, border: '#4C1D1D' },
+  tied: { bg: 'rgba(251,191,36,0.08)', color: T.gold, border: '#4A3411' },
 };
 
 export const BADGE_ICON: Record<string, string> = {
-  active: '◉', passed: '✓', rejected: '✕', tied: '⇌',
+  active: '◉',
+  passed: '✓',
+  rejected: '✕',
+  tied: '⇌',
 };
-
-/** Animation durations in ms — keep in sync with globals.css transitions. */
-export const ANIM = {
-  fast:   150,
-  normal: 220,
-  slow:   500,
-} as const;
-
-/** Z-index scale to avoid magic numbers in components. */
-export const Z = {
-  base:    0,
-  card:    1,
-  nav:     100,
-  modal:   200,
-  toast:   300,
-} as const;
-
-/** Spacing scale in px — multiples of 4. */
-export const SP = {
-  xs:  4,
-  sm:  8,
-  md:  16,
-  lg:  24,
-  xl:  32,
-  xxl: 48,
-} as const;
-
-/** Border radius scale matching --r and --rl CSS vars. */
-export const RADIUS = {
-  sm:  6,
-  md:  12,
-  lg:  18,
-  full: 9999,
-} as const;
-
-/** Font size scale in px matching body=15px baseline. */
-export const FS = {
-  xs:  11,
-  sm:  13,
-  md:  15,
-  lg:  17,
-  xl:  22,
-  h1:  32,
-} as const;
-
-/** Consistent border string presets. */
-export const BORDER = {
-  default: '1px solid #1F2E1F',
-  hi:      '1px solid #2A4230',
-  focus:   '1px solid #00D87C',
-  error:   '1px solid #3A1E1E',
-} as const;
-
-/** Gap scale for flex/grid layouts. */
-export const GAP = { xs:4, sm:8, md:12, lg:16, xl:24, xxl:32 } as const;
-
-export const CURSOR = {
-  pointer: 'pointer', wait: 'wait',
-  disabled: 'not-allowed', text: 'text',
-} as const;
-
-export const BACKDROP = 'rgba(9, 16, 10, 0.85)';
-
-/** Transition presets for batch 10 components. */
-export const TR10 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 10. */
-export const MW10 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 11 components. */
-export const TR11 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 11. */
-export const MW11 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 12 components. */
-export const TR12 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 12. */
-export const MW12 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 13 components. */
-export const TR13 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 13. */
-export const MW13 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 14 components. */
-export const TR14 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 14. */
-export const MW14 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 15 components. */
-export const TR15 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 15. */
-export const MW15 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 16 components. */
-export const TR16 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 16. */
-export const MW16 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 17 components. */
-export const TR17 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 17. */
-export const MW17 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Consistent border string presets. */
-export const BORDER = {
-  default: '1px solid #1F2E1F',
-  hi:      '1px solid #2A4230',
-  focus:   '1px solid #00D87C',
-  error:   '1px solid #3A1E1E',
-} as const;
-
-/** Gap scale for flex/grid layouts. */
-export const GAP = { xs:4, sm:8, md:12, lg:16, xl:24, xxl:32 } as const;
-
-export const CURSOR = {
-  pointer: 'pointer', wait: 'wait',
-  disabled: 'not-allowed', text: 'text',
-} as const;
-
-export const BACKDROP = 'rgba(9, 16, 10, 0.85)';
-
-/** Transition presets for batch 10 components. */
-export const TR10 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 10. */
-export const MW10 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 11 components. */
-export const TR11 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 11. */
-export const MW11 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 12 components. */
-export const TR12 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 12. */
-export const MW12 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 13 components. */
-export const TR13 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 13. */
-export const MW13 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 14 components. */
-export const TR14 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 14. */
-export const MW14 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 15 components. */
-export const TR15 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 15. */
-export const MW15 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 16 components. */
-export const TR16 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 16. */
-export const MW16 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Transition presets for batch 17 components. */
-export const TR17 = {
-  fast:   'all 0.15s ease',
-  normal: 'all 0.22s ease',
-  slow:   'all 0.5s ease',
-} as const;
-
-/** Max-width layout scale for batch 17. */
-export const MW17 = { prose: 640, page: 860, wide: 1100 } as const;
-
-/** Colour stops for vote result gradient bars. */
-export const VOTE_COLORS = {
-  yes:     '#00D87C',
-  no:      '#F06060',
-  abstain: '#2A3E2A',
-} as const;
-
-/** Palette for proposal state badges. */
-export const STATE_COLORS = {
-  active:   { bg: 'rgba(0,216,124,.09)',  fg: '#00D87C', border: '#1A3A26' },
-  passed:   { bg: 'rgba(0,200,100,.07)',  fg: '#00C87A', border: '#173222' },
-  rejected: { bg: 'rgba(240,96,96,.07)',  fg: '#F06060', border: '#3A1E1E' },
-  tied:     { bg: 'rgba(232,168,48,.07)', fg: '#E8A830', border: '#3A2E14' },
-} as const;
-
-/** Colours for network badge indicators. */
-export const NETWORK_COLORS = {
-  mainnet: { bg: 'rgba(0,216,124,.09)', fg: '#00D87C', label: 'Mainnet' },
-  testnet: { bg: 'rgba(232,168,48,.07)', fg: '#E8A830', label: 'Testnet' },
-} as const;
-
-/** Wallet provider brand colours for connect modal. */
-export const WALLET_COLORS: Record<string, string> = {
-  leather: '#FF5500',
-  xverse:  '#7B3FE4',
-  asigna:  '#00C8A0',
-  okx:     '#FFFFFF',
-};
-
-/** Consistent hover state style objects for buttons. */
-export const HOVER = {
-  green:  { borderColor: '#2A4230', color: '#00D87C', background: 'rgba(0,216,124,.09)' },
-  red:    { borderColor: '#3A1E1E', color: '#F06060', background: 'rgba(240,96,96,.07)' },
-  subtle: { borderColor: '#2A4230', color: '#D8EAD8' },
-} as const;
-
-/** Consistent disabled state style. */
-export const DISABLED_STYLE = {
-  opacity: 0.45,
-  cursor:  'not-allowed',
-  pointerEvents: 'none' as const,
-} as const;

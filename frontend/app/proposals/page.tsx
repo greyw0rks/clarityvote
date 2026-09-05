@@ -12,7 +12,7 @@ type Filter = 'all' | ProposalState;
 const TABS: Filter[] = ['all', 'active', 'passed', 'rejected', 'tied'];
 
 export default function ProposalsPage() {
-  const { proposals } = useApp();
+  const { proposals, loading, error, refresh, loadMore, hasMore, total, contractId, network } = useApp();
   const [filter, setFilter] = useState<Filter>('all');
   const [query,  setQuery]  = useState('');
 
@@ -32,13 +32,34 @@ export default function ProposalsPage() {
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: 4 }}>Proposals</h1>
           <p style={{ color: T.mu, fontSize: 14 }}>
-            Community governance on Stacks · {proposals.length} total
+            Read live from <span className="mono" style={{ fontSize: 12 }}>{contractId}</span> on {network}
+            {loading && proposals.length === 0
+              ? ' · loading…'
+              : ` · showing ${proposals.length} of ${total}`}
           </p>
         </div>
         <Link href="/proposals/new">
           <Btn>+ New Proposal</Btn>
         </Link>
       </div>
+
+      {error && (
+        <div style={{
+          background: 'rgba(248,113,113,.08)', border: '1px solid #4C1D1D',
+          borderRadius: T.r, padding: '12px 14px', marginBottom: 20,
+          fontSize: 13, color: T.red,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12,
+        }}>
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={refresh}
+            style={{ background: 'none', border: `1px solid ${T.bdr}`, color: T.tx, borderRadius: T.r, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontFamily: T.font }}
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Filters + search */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -58,7 +79,7 @@ export default function ProposalsPage() {
                 border:       `1px solid ${filter === t ? T.bdr : 'transparent'}`,
                 color:        filter === t ? T.tx  : T.mu,
                 fontSize:     13, fontWeight: 500,
-                fontFamily:   "'DM Sans', sans-serif",
+                fontFamily:   T.font,
                 cursor:       'pointer',
                 transition:   'all .12s',
                 textTransform: 'capitalize',
@@ -78,13 +99,38 @@ export default function ProposalsPage() {
       </div>
 
       {/* List */}
-      {filtered.length === 0 ? (
+      {loading && proposals.length === 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} className="card" style={{ height: 118, background: T.s2, borderColor: T.bdr }} />
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="card" style={{ padding: '48px 24px', textAlign: 'center', color: T.mu }}>
-          No proposals match this filter.
+          {proposals.length === 0
+            ? 'No proposals have been created on this contract yet.'
+            : 'No proposals match this filter.'}
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {filtered.map(p => <ProposalCard key={p.id} p={p} />)}
+
+          {hasMore && !query && filter === 'all' && (
+            <button
+              type="button"
+              onClick={loadMore}
+              disabled={loading}
+              style={{
+                marginTop: 8, padding: '12px 0', width: '100%',
+                background: T.s2, border: `1px solid ${T.bdr}`, borderRadius: T.r,
+                color: loading ? T.mu : T.tx, cursor: loading ? 'wait' : 'pointer',
+                fontFamily: T.font, fontSize: 13, fontWeight: 600,
+                transition: T.tr,
+              }}
+            >
+              {loading ? 'Loading…' : `Load ${Math.min(24, total - proposals.length)} more`}
+            </button>
+          )}
         </div>
       )}
 

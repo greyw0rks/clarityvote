@@ -56,7 +56,7 @@ export default function ProposalDetailPage() {
         onClick={() => router.push('/proposals')}
         style={{
           background: 'none', border: 'none', color: T.mu,
-          fontSize: 13, fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13, fontFamily: T.font,
           cursor: 'pointer', marginBottom: 28,
           display: 'flex', alignItems: 'center', gap: 6,
         }}
@@ -265,7 +265,7 @@ function VoteButton({
         color:        hov ? color : T.mu,
         fontWeight:   700,
         fontSize:     15,
-        fontFamily:   "'DM Sans', sans-serif",
+        fontFamily:   T.font,
         opacity:      disabled ? 0.5 : 1,
         transition:   'all .15s',
       }}

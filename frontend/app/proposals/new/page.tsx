@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { T } from '@/lib/tokens';
 import { useApp } from '@/lib/store';
-import { DURATION_OPTS, QUORUM_OPTS } from '@/lib/mockData';
+import { DURATION_OPTS, QUORUM_OPTS, TITLE_MAX, DESCRIPTION_MAX } from '@/lib/config';
+import { explorerUrl } from '@/lib/contract';
 import { Btn } from '@/components/Btn';
 import { ConnectWall } from '@/components/ConnectWall';
 
@@ -18,14 +19,16 @@ export default function NewProposalPage() {
   const [quorIdx, setQuorIdx] = useState(1);
   const [busy,    setBusy]    = useState(false);
   const [error,   setError]   = useState('');
+  const [txid,    setTxid]    = useState('');
 
   const dur  = DURATION_OPTS[durIdx];
   const quor = QUORUM_OPTS[quorIdx];
 
   const validate = (): string => {
-    if (!title.trim())     return 'Title is required.';
-    if (title.length > 80) return 'Title must be 80 characters or fewer.';
-    if (!desc.trim())      return 'Description is required.';
+    if (!title.trim())            return 'Title is required.';
+    if (title.length > TITLE_MAX) return `Title must be ${TITLE_MAX} characters or fewer.`;
+    if (!desc.trim())             return 'Description is required.';
+    if (desc.length > DESCRIPTION_MAX) return `Description must be ${DESCRIPTION_MAX} characters or fewer.`;
     return '';
   };
 
@@ -34,15 +37,19 @@ export default function NewProposalPage() {
     if (err) { setError(err); return; }
     setError('');
     setBusy(true);
-    await new Promise(r => setTimeout(r, 700)); // simulate tx
-    const newId = createProposal({
+
+    // The wallet returns a txid; the proposal only gets its id once the
+    // transaction is mined, so there is nothing to navigate to yet.
+    const id = await createProposal({
       title:          title.trim(),
       description:    desc.trim(),
       durationBlocks: dur.blocks,
       quorum:         quor.micro,
     });
     setBusy(false);
-    router.push(`/proposals/${newId}`);
+
+    if (!id) { setError('Transaction was not submitted.'); return; }
+    setTxid(id);
   };
 
   return (
@@ -52,7 +59,7 @@ export default function NewProposalPage() {
         onClick={() => router.back()}
         style={{
           background: 'none', border: 'none', color: T.mu,
-          fontSize: 13, fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13, fontFamily: T.font,
           cursor: 'pointer', marginBottom: 28,
           display: 'flex', alignItems: 'center', gap: 6,
         }}
@@ -122,7 +129,7 @@ export default function NewProposalPage() {
                     border:       `1px solid ${durIdx === i ? T.bdh : T.bdr}`,
                     color:        durIdx === i ? T.g  : T.mu,
                     fontSize:     13, fontWeight: 600,
-                    fontFamily:   "'DM Sans', sans-serif",
+                    fontFamily:   T.font,
                     transition:   'all .12s',
                   }}
                 >
@@ -153,7 +160,7 @@ export default function NewProposalPage() {
                     border:       `1px solid ${quorIdx === i ? T.bdh : T.bdr}`,
                     color:        quorIdx === i ? T.g  : T.mu,
                     fontSize:     13, fontWeight: 600,
-                    fontFamily:   "'DM Sans', sans-serif",
+                    fontFamily:   T.font,
                     transition:   'all .12s',
                   }}
                 >
@@ -190,20 +197,54 @@ export default function NewProposalPage() {
           {/* Error */}
           {error && (
             <div style={{
-              background: 'rgba(240,96,96,.08)', border: `1px solid #3A1E1E`,
-              borderRadius: 6, padding: '10px 14px', marginBottom: 16,
+              background: 'rgba(248,113,113,.08)', border: `1px solid #4C1D1D`,
+              borderRadius: T.r, padding: '10px 14px', marginBottom: 16,
               fontSize: 13, color: T.red,
             }}>
               {error}
             </div>
           )}
 
+          {/* Submitted — the proposal id is assigned when the tx is mined */}
+          {txid && (
+            <div style={{
+              background: T.gg, border: `1px solid #1B4D2E`,
+              borderRadius: T.r, padding: '12px 14px', marginBottom: 16,
+              fontSize: 13, color: T.tx,
+            }}>
+              <p style={{ marginBottom: 6 }}>Proposal transaction submitted.</p>
+              <a
+                href={explorerUrl(txid)}
+                target="_blank"
+                rel="noreferrer"
+                className="mono"
+                style={{ color: T.g, fontSize: 12 }}
+              >
+                {txid.slice(0, 10)}…{txid.slice(-6)} ↗
+              </a>
+              <p style={{ color: T.mu, marginTop: 8, fontSize: 12 }}>
+                It appears in the list once the block confirms.
+              </p>
+              <button
+                type="button"
+                onClick={() => router.push('/proposals')}
+                style={{
+                  background: 'none', border: 'none', color: T.g,
+                  cursor: 'pointer', padding: 0, marginTop: 10, fontSize: 13,
+                  fontFamily: T.font,
+                }}
+              >
+                Back to proposals →
+              </button>
+            </div>
+          )}
+
           <Btn
             onClick={handleSubmit}
-            disabled={busy || !title.trim() || !desc.trim()}
+            disabled={busy || !!txid || !title.trim() || !desc.trim()}
             full
           >
-            {busy ? 'Submitting…' : 'Create Proposal →'}
+            {busy ? 'Confirm in your wallet…' : txid ? 'Submitted' : 'Create Proposal →'}
           </Btn>
 
         </div>
