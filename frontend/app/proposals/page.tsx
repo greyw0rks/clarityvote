@@ -1,139 +1,98 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { T } from '@/lib/tokens';
 import { useApp } from '@/lib/store';
-import { Btn } from '@/components/Btn';
 import { ProposalCard } from '@/components/ProposalCard';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/field';
+import { cn } from '@/lib/cn';
 import type { ProposalState } from '@/lib/types';
 
-type Filter = 'all' | ProposalState;
-const TABS: Filter[] = ['all', 'active', 'passed', 'rejected', 'tied'];
+const FILTERS: { key: 'all' | ProposalState; label: string }[] = [
+  { key: 'all', label: 'ALL' },
+  { key: 'active', label: 'LIVE' },
+  { key: 'passed', label: 'PASSED' },
+  { key: 'rejected', label: 'REJECTED' },
+  { key: 'tied', label: 'TIED' },
+];
 
 export default function ProposalsPage() {
-  const { proposals, loading, error, refresh, loadMore, hasMore, total, contractId, network } = useApp();
-  const [filter, setFilter] = useState<Filter>('all');
-  const [query,  setQuery]  = useState('');
+  const { proposals, votes, loading, hasMore, loadMore, total, connected } = useApp();
+  const [filter, setFilter] = useState<'all' | ProposalState>('all');
+  const [q, setQ] = useState('');
 
-  const filtered = proposals
-    .filter(p => filter === 'all' || p.state === filter)
-    .filter(p => !query || p.title.toLowerCase().includes(query.toLowerCase()));
+  const shown = useMemo(() => {
+    const query = q.trim().toLowerCase();
+    return proposals.filter((p) => {
+      if (filter !== 'all' && p.state !== filter) return false;
+      if (query && !`${p.title} ${p.description}`.toLowerCase().includes(query)) return false;
+      return true;
+    });
+  }, [proposals, filter, q]);
 
   return (
-    <div className="fade" style={{ maxWidth: 900, margin: '0 auto', padding: '48px 28px 80px' }}>
-
-      {/* Header */}
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        alignItems: 'flex-start', marginBottom: 32,
-        flexWrap: 'wrap', gap: 16,
-      }}>
+    <div className="px-6 py-10 md:px-10">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: 4 }}>Proposals</h1>
-          <p style={{ color: T.mu, fontSize: 14 }}>
-            Read live from <span className="mono" style={{ fontSize: 12 }}>{contractId}</span> on {network}
-            {loading && proposals.length === 0
-              ? ' · loading…'
-              : ` · showing ${proposals.length} of ${total}`}
-          </p>
+          <div className="tele mb-1">[ REGISTRY / {total} UNITS ON CHAIN ]</div>
+          <h1 className="macro text-5xl md:text-6xl">PROPOSALS</h1>
         </div>
-        <Link href="/proposals/new">
-          <Btn>+ New Proposal</Btn>
-        </Link>
+        {connected && (
+          <Link href="/proposals/new"><Button size="lg">NEW PROPOSAL +</Button></Link>
+        )}
       </div>
 
-      {error && (
-        <div style={{
-          background: 'rgba(248,113,113,.08)', border: '1px solid #4C1D1D',
-          borderRadius: T.r, padding: '12px 14px', marginBottom: 20,
-          fontSize: 13, color: T.red,
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12,
-        }}>
-          <span>{error}</span>
-          <button
-            type="button"
-            onClick={refresh}
-            style={{ background: 'none', border: `1px solid ${T.bdr}`, color: T.tx, borderRadius: T.r, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontFamily: T.font }}
-          >
-            Retry
-          </button>
-        </div>
-      )}
+      <hr className="rule my-6" />
 
-      {/* Filters + search */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{
-          display: 'flex', gap: 4,
-          background: T.s2, padding: 4, borderRadius: 8,
-          border: `1px solid ${T.bdr}`,
-        }}>
-          {TABS.map(t => (
+      {/* CONTROLS */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-wrap gap-px border-2 border-ink bg-ink">
+          {FILTERS.map((f) => (
             <button
-              key={t}
-              onClick={() => setFilter(t)}
-              style={{
-                padding:      '5px 14px',
-                borderRadius: 6,
-                background:   filter === t ? T.s1 : 'transparent',
-                border:       `1px solid ${filter === t ? T.bdr : 'transparent'}`,
-                color:        filter === t ? T.tx  : T.mu,
-                fontSize:     13, fontWeight: 500,
-                fontFamily:   T.font,
-                cursor:       'pointer',
-                transition:   'all .12s',
-                textTransform: 'capitalize',
-              }}
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={cn(
+                'px-4 py-2 font-mono text-[0.7rem] font-bold uppercase tracking-widest',
+                filter === f.key ? 'bg-hazard text-paper' : 'bg-paper text-ink hover:bg-paper-2',
+              )}
             >
-              {t}
+              {f.label}
             </button>
           ))}
         </div>
-
-        <input
-          placeholder="Search proposals…"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          style={{ maxWidth: 220, padding: '7px 12px', fontSize: 13 }}
-        />
+        <div className="md:w-72">
+          <Input placeholder="SEARCH TITLE / BODY…" value={q} onChange={(e) => setQ(e.target.value)} />
+        </div>
       </div>
 
-      {/* List */}
-      {loading && proposals.length === 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {[0, 1, 2].map(i => (
-            <div key={i} className="card" style={{ height: 118, background: T.s2, borderColor: T.bdr }} />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="card" style={{ padding: '48px 24px', textAlign: 'center', color: T.mu }}>
-          {proposals.length === 0
-            ? 'No proposals have been created on this contract yet.'
-            : 'No proposals match this filter.'}
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {filtered.map(p => <ProposalCard key={p.id} p={p} />)}
+      {/* GRID */}
+      <div className="mt-6">
+        {loading && proposals.length === 0 ? (
+          <div className="border-2 border-ink bg-paper-2 p-16 text-center macro text-2xl">
+            <span className="blink">READING CHAIN…</span>
+          </div>
+        ) : shown.length === 0 ? (
+          <div className="border-2 border-ink bg-paper-2 p-16 text-center">
+            <div className="macro text-2xl">NO MATCHES</div>
+            <p className="mt-2 mono text-[0.7rem] uppercase tracking-widest text-ink-3">
+              {proposals.length === 0 ? 'NO PROPOSALS ON CHAIN YET' : 'ADJUST FILTER OR SEARCH'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {shown.map((p) => <ProposalCard key={p.id} p={p} myVote={votes[p.id]} />)}
+          </div>
+        )}
+      </div>
 
-          {hasMore && !query && filter === 'all' && (
-            <button
-              type="button"
-              onClick={loadMore}
-              disabled={loading}
-              style={{
-                marginTop: 8, padding: '12px 0', width: '100%',
-                background: T.s2, border: `1px solid ${T.bdr}`, borderRadius: T.r,
-                color: loading ? T.mu : T.tx, cursor: loading ? 'wait' : 'pointer',
-                fontFamily: T.font, fontSize: 13, fontWeight: 600,
-                transition: T.tr,
-              }}
-            >
-              {loading ? 'Loading…' : `Load ${Math.min(24, total - proposals.length)} more`}
-            </button>
-          )}
+      {hasMore && (
+        <div className="mt-8 text-center">
+          <Button variant="outline" size="lg" onClick={loadMore} disabled={loading}>
+            {loading ? 'LOADING…' : 'LOAD MORE »'}
+          </Button>
         </div>
       )}
-
     </div>
   );
 }

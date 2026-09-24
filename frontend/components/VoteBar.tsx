@@ -1,36 +1,44 @@
-import { pct } from '@/lib/utils';
-import { T } from '@/lib/tokens';
+import { toSTX, pct } from '@/lib/utils';
 
-interface Props {
-  yes:     bigint;
-  no:      bigint;
-  abstain: bigint;
-  total:   bigint;
-}
-
-export function VoteBar({ yes, no, abstain, total }: Props) {
-  const yp = pct(yes, total);
-  const np = pct(no,  total);
-  const ap = pct(abstain, total);
+/** Yes = solid ink · No = hazard red · Abstain = neutral hatch. */
+export function VoteBar({ yes, no, abstain }: { yes: bigint; no: bigint; abstain: bigint }) {
+  const total = yes + no + abstain;
+  const y = pct(yes, total);
+  const n = pct(no, total);
+  const a = Math.max(0, 100 - y - n);
 
   return (
     <div>
-      <div style={{
-        height: 7, background: T.s3, borderRadius: 4,
-        overflow: 'hidden', display: 'flex',
-      }}>
-        <div style={{ width: `${yp}%`, background: T.g,   transition: 'width .5s ease' }} />
-        <div style={{ width: `${ap}%`, background: T.sub, transition: 'width .5s ease' }} />
-        <div style={{ width: `${np}%`, background: T.red, transition: 'width .5s ease' }} />
+      <div className="flex h-7 w-full border-2 border-ink bg-paper">
+        {total === 0n ? (
+          <div className="hatch flex-1 opacity-40" />
+        ) : (
+          <>
+            <div className="bg-ink" style={{ width: `${y}%` }} />
+            <div className="hatch" style={{ width: `${a}%` }} />
+            <div className="bg-hazard" style={{ width: `${n}%` }} />
+          </>
+        )}
       </div>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        fontSize: 12, color: T.mu, marginTop: 5,
-      }}>
-        <span style={{ color: T.g,   fontWeight: 600 }}>{yp}% Yes</span>
-        <span>{ap}% Abstain</span>
-        <span style={{ color: T.red, fontWeight: 600 }}>{np}% No</span>
+      <dl className="mt-2 grid grid-cols-3 gap-px border-2 border-ink bg-ink">
+        <Cell label="YES" value={toSTX(yes)} className="bg-paper" swatch="bg-ink" />
+        <Cell label="ABSTAIN" value={toSTX(abstain)} className="bg-paper" swatch="hatch" />
+        <Cell label="NO" value={toSTX(no)} className="bg-paper" swatch="bg-hazard" />
+      </dl>
+    </div>
+  );
+}
+
+function Cell({ label, value, className, swatch }: {
+  label: string; value: string; className: string; swatch: string;
+}) {
+  return (
+    <div className={`px-2 py-1.5 ${className}`}>
+      <div className="flex items-center gap-1.5">
+        <span className={`h-2 w-2 border border-ink ${swatch}`} />
+        <dt className="mono text-[0.6rem] font-bold uppercase tracking-widest text-ink-3">{label}</dt>
       </div>
+      <dd className="macro mt-0.5 text-lg">{value}</dd>
     </div>
   );
 }

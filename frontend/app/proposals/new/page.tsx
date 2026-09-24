@@ -2,136 +2,82 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { T } from '@/lib/tokens';
 import { useApp } from '@/lib/store';
-import { DURATION_OPTS, QUORUM_OPTS, TITLE_MAX, DESCRIPTION_MAX } from '@/lib/config';
-import { explorerUrl } from '@/lib/contract';
-import { Btn } from '@/components/Btn';
 import { ConnectWall } from '@/components/ConnectWall';
+import { Button } from '@/components/ui/button';
+import { Field, Input, Textarea } from '@/components/ui/field';
+import { cn } from '@/lib/cn';
+import { DURATION_OPTS, QUORUM_OPTS, TITLE_MAX, DESCRIPTION_MAX } from '@/lib/config';
+import { toSTX, blocksToDate } from '@/lib/utils';
 
 export default function NewProposalPage() {
+  const { connected, createProposal } = useApp();
   const router = useRouter();
-  const { connected, connect, createProposal } = useApp();
 
-  const [title,   setTitle]   = useState('');
-  const [desc,    setDesc]    = useState('');
-  const [durIdx,  setDurIdx]  = useState(1);
-  const [quorIdx, setQuorIdx] = useState(1);
-  const [busy,    setBusy]    = useState(false);
-  const [error,   setError]   = useState('');
-  const [txid,    setTxid]    = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [duration, setDuration] = useState(DURATION_OPTS[2].blocks);
+  const [quorum, setQuorum] = useState(QUORUM_OPTS[1].micro);
+  const [busy, setBusy] = useState(false);
 
-  const dur  = DURATION_OPTS[durIdx];
-  const quor = QUORUM_OPTS[quorIdx];
+  const valid = title.trim().length > 0 && title.length <= TITLE_MAX && description.length <= DESCRIPTION_MAX && duration > 0;
 
-  const validate = (): string => {
-    if (!title.trim())            return 'Title is required.';
-    if (title.length > TITLE_MAX) return `Title must be ${TITLE_MAX} characters or fewer.`;
-    if (!desc.trim())             return 'Description is required.';
-    if (desc.length > DESCRIPTION_MAX) return `Description must be ${DESCRIPTION_MAX} characters or fewer.`;
-    return '';
-  };
-
-  const handleSubmit = async () => {
-    const err = validate();
-    if (err) { setError(err); return; }
-    setError('');
+  async function submit() {
+    if (!valid || busy) return;
     setBusy(true);
-
-    // The wallet returns a txid; the proposal only gets its id once the
-    // transaction is mined, so there is nothing to navigate to yet.
-    const id = await createProposal({
-      title:          title.trim(),
-      description:    desc.trim(),
-      durationBlocks: dur.blocks,
-      quorum:         quor.micro,
-    });
+    const txid = await createProposal({ title: title.trim(), description, durationBlocks: duration, quorum });
     setBusy(false);
+    if (txid) router.push('/proposals');
+  }
 
-    if (!id) { setError('Transaction was not submitted.'); return; }
-    setTxid(id);
-  };
+  if (!connected) {
+    return (
+      <div className="px-6 py-10 md:px-10">
+        <h1 className="macro mb-6 text-5xl">NEW PROPOSAL</h1>
+        <ConnectWall message="CONNECT A STACKS WALLET TO CREATE A PROPOSAL" />
+      </div>
+    );
+  }
 
   return (
-    <div className="fade" style={{ maxWidth: 680, margin: '0 auto', padding: '48px 28px 80px' }}>
+    <div className="px-6 py-10 md:px-10">
+      <div className="tele mb-1">[ AUTHORING / NEW GOVERNANCE UNIT ]</div>
+      <h1 className="macro text-5xl md:text-6xl">NEW PROPOSAL</h1>
+      <hr className="rule my-6" />
 
-      <button
-        onClick={() => router.back()}
-        style={{
-          background: 'none', border: 'none', color: T.mu,
-          fontSize: 13, fontFamily: T.font,
-          cursor: 'pointer', marginBottom: 28,
-          display: 'flex', alignItems: 'center', gap: 6,
-        }}
-      >
-        ← Back
-      </button>
-
-      <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: 6 }}>New Proposal</h1>
-      <p style={{ color: T.mu, fontSize: 14, marginBottom: 32 }}>
-        Anyone can create a proposal. Voting power = live STX balance.
-      </p>
-
-      {!connected ? (
-        <ConnectWall onConnect={connect} />
-      ) : (
-        <div className="card" style={{ padding: '28px' }}>
-
-          {/* Title */}
-          <div style={{ marginBottom: 20 }}>
-            <label style={{
-              fontSize: 13, fontWeight: 600, color: T.mu,
-              display: 'block', marginBottom: 6,
-            }}>
-              Title <span style={{ fontWeight: 400 }}>({title.length}/80)</span>
-            </label>
-            <input
-              placeholder="Short, descriptive title…"
+      <div className="grid gap-px bg-ink lg:grid-cols-[1.4fr_1fr]">
+        {/* FORM */}
+        <div className="space-y-6 bg-paper p-6">
+          <Field label="TITLE" count={`${title.length}/${TITLE_MAX}`}>
+            <Input
               value={title}
-              maxLength={80}
-              onChange={e => setTitle(e.target.value)}
+              maxLength={TITLE_MAX}
+              placeholder="SHORT, SPECIFIC HEADLINE"
+              onChange={(e) => setTitle(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {/* Description */}
-          <div style={{ marginBottom: 24 }}>
-            <label style={{
-              fontSize: 13, fontWeight: 600, color: T.mu,
-              display: 'block', marginBottom: 6,
-            }}>
-              Description
-            </label>
-            <textarea
-              placeholder="Explain the proposal in detail — context, rationale, expected outcomes…"
-              value={desc}
-              onChange={e => setDesc(e.target.value)}
+          <Field label="DESCRIPTION" count={`${description.length}/${DESCRIPTION_MAX}`}>
+            <Textarea
+              rows={6}
+              value={description}
+              maxLength={DESCRIPTION_MAX}
+              placeholder="WHAT IS BEING DECIDED, AND WHY. RATIONALE, LINKS, EXPECTED OUTCOME."
+              onChange={(e) => setDescription(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {/* Duration */}
-          <div style={{ marginBottom: 24 }}>
-            <label style={{
-              fontSize: 13, fontWeight: 600, color: T.mu,
-              display: 'block', marginBottom: 10,
-            }}>
-              Voting Duration
-            </label>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {DURATION_OPTS.map((d, i) => (
+          <div>
+            <div className="tele mb-2 font-bold text-ink">VOTING WINDOW</div>
+            <div className="grid grid-cols-4 gap-px border-2 border-ink bg-ink">
+              {DURATION_OPTS.map((d) => (
                 <button
-                  key={i}
-                  onClick={() => setDurIdx(i)}
-                  style={{
-                    padding:      '8px 16px',
-                    borderRadius: 8,
-                    cursor:       'pointer',
-                    background:   durIdx === i ? T.gg : T.s2,
-                    border:       `1px solid ${durIdx === i ? T.bdh : T.bdr}`,
-                    color:        durIdx === i ? T.g  : T.mu,
-                    fontSize:     13, fontWeight: 600,
-                    fontFamily:   T.font,
-                    transition:   'all .12s',
-                  }}
+                  key={d.blocks}
+                  onClick={() => setDuration(d.blocks)}
+                  className={cn(
+                    'px-2 py-3 font-mono text-[0.7rem] font-bold uppercase tracking-widest',
+                    duration === d.blocks ? 'bg-ink text-paper' : 'bg-paper hover:bg-paper-2',
+                  )}
                 >
                   {d.label}
                 </button>
@@ -139,116 +85,56 @@ export default function NewProposalPage() {
             </div>
           </div>
 
-          {/* Quorum */}
-          <div style={{ marginBottom: 28 }}>
-            <label style={{
-              fontSize: 13, fontWeight: 600, color: T.mu,
-              display: 'block', marginBottom: 10,
-            }}>
-              Quorum
-            </label>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {QUORUM_OPTS.map((q, i) => (
+          <div>
+            <div className="tele mb-2 font-bold text-ink">QUORUM THRESHOLD (STX)</div>
+            <div className="grid grid-cols-4 gap-px border-2 border-ink bg-ink">
+              {QUORUM_OPTS.map((qo) => (
                 <button
-                  key={i}
-                  onClick={() => setQuorIdx(i)}
-                  style={{
-                    padding:      '8px 16px',
-                    borderRadius: 8,
-                    cursor:       'pointer',
-                    background:   quorIdx === i ? T.gg : T.s2,
-                    border:       `1px solid ${quorIdx === i ? T.bdh : T.bdr}`,
-                    color:        quorIdx === i ? T.g  : T.mu,
-                    fontSize:     13, fontWeight: 600,
-                    fontFamily:   T.font,
-                    transition:   'all .12s',
-                  }}
+                  key={qo.label}
+                  onClick={() => setQuorum(qo.micro)}
+                  className={cn(
+                    'px-2 py-3 font-mono text-[0.7rem] font-bold uppercase tracking-widest',
+                    quorum === qo.micro ? 'bg-hazard text-paper' : 'bg-paper hover:bg-paper-2',
+                  )}
                 >
-                  {q.label}
+                  {qo.label}
                 </button>
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Preview */}
-          <div style={{
-            background: T.s2, border: `1px solid ${T.bdr}`,
-            borderRadius: 8, padding: '14px 16px', marginBottom: 24,
-          }}>
-            <p style={{
-              fontSize: 12, color: T.mu, marginBottom: 8,
-              fontWeight: 600, letterSpacing: '.05em', textTransform: 'uppercase',
-            }}>
-              Preview
-            </p>
-            {([
-              ['Duration', `${dur.blocks} blocks · ${dur.label}`       ],
-              ['Quorum',   quor.label                                   ],
-              ['Finalize', 'Anyone can call after window closes'        ],
-              ['Power',    'Live STX balance at vote time'              ],
-            ] as const).map(([k, v]) => (
-              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, padding: '5px 0' }}>
-                <span style={{ color: T.mu }}>{k}</span>
-                <span className="mono" style={{ color: T.tx, fontSize: 12 }}>{v}</span>
-              </div>
-            ))}
+        {/* PREVIEW */}
+        <div className="bg-paper p-6">
+          <div className="tele mb-3">[ PREVIEW ]</div>
+          <div className="border-2 border-ink bg-paper-2 p-5">
+            <h3 className="macro text-2xl leading-[0.9]">{title || 'UNTITLED PROPOSAL'}</h3>
+            <p className="mt-2 line-clamp-4 text-sm text-ink-2">{description || 'No description provided.'}</p>
+            <hr className="rule-thin my-4" />
+            <dl className="space-y-2 mono text-[0.7rem] uppercase tracking-widest">
+              <Row k="WINDOW" v={`${duration} BLOCKS`} />
+              <Row k="EST. CLOSE" v={blocksToDate(duration)} />
+              <Row k="QUORUM" v={`${toSTX(quorum)} STX`} />
+            </dl>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div style={{
-              background: 'rgba(248,113,113,.08)', border: `1px solid #4C1D1D`,
-              borderRadius: T.r, padding: '10px 14px', marginBottom: 16,
-              fontSize: 13, color: T.red,
-            }}>
-              {error}
-            </div>
-          )}
-
-          {/* Submitted — the proposal id is assigned when the tx is mined */}
-          {txid && (
-            <div style={{
-              background: T.gg, border: `1px solid #1B4D2E`,
-              borderRadius: T.r, padding: '12px 14px', marginBottom: 16,
-              fontSize: 13, color: T.tx,
-            }}>
-              <p style={{ marginBottom: 6 }}>Proposal transaction submitted.</p>
-              <a
-                href={explorerUrl(txid)}
-                target="_blank"
-                rel="noreferrer"
-                className="mono"
-                style={{ color: T.g, fontSize: 12 }}
-              >
-                {txid.slice(0, 10)}…{txid.slice(-6)} ↗
-              </a>
-              <p style={{ color: T.mu, marginTop: 8, fontSize: 12 }}>
-                It appears in the list once the block confirms.
-              </p>
-              <button
-                type="button"
-                onClick={() => router.push('/proposals')}
-                style={{
-                  background: 'none', border: 'none', color: T.g,
-                  cursor: 'pointer', padding: 0, marginTop: 10, fontSize: 13,
-                  fontFamily: T.font,
-                }}
-              >
-                Back to proposals →
-              </button>
-            </div>
-          )}
-
-          <Btn
-            onClick={handleSubmit}
-            disabled={busy || !!txid || !title.trim() || !desc.trim()}
-            full
-          >
-            {busy ? 'Confirm in your wallet…' : txid ? 'Submitted' : 'Create Proposal →'}
-          </Btn>
-
+          <Button className="mt-5 w-full" size="lg" disabled={!valid || busy} onClick={submit}>
+            {busy ? 'AWAITING WALLET…' : 'SUBMIT TO CHAIN »'}
+          </Button>
+          <p className="mt-3 mono text-[0.65rem] uppercase leading-relaxed tracking-widest text-ink-3">
+            » Permissionless. Your wallet signs one transaction. Voting opens immediately at the current block.
+          </p>
         </div>
-      )}
+      </div>
+    </div>
+  );
+}
+
+function Row({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex justify-between">
+      <dt className="text-ink-3">{k}</dt>
+      <dd className="text-ink">{v}</dd>
     </div>
   );
 }

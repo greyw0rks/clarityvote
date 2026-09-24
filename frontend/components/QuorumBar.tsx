@@ -1,30 +1,20 @@
-import { pct, toSTX } from '@/lib/utils';
-import { T } from '@/lib/tokens';
+import { toSTX, pct } from '@/lib/utils';
 
-interface Props {
-  total:  bigint;
-  quorum: bigint;
-}
-
-export function QuorumBar({ total, quorum }: Props) {
-  const p   = quorum === 0n ? 100 : Math.min(pct(total, quorum), 100);
-  const met = total >= quorum;
+/** Participation vs the quorum threshold. total-power is the votes cast so far. */
+export function QuorumBar({ totalPower, quorum }: { totalPower: bigint; quorum: bigint }) {
+  const reached = quorum > 0n && totalPower >= quorum;
+  const p = quorum > 0n ? Math.min(100, pct(totalPower, quorum)) : 100;
 
   return (
     <div>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        fontSize: 12, color: T.mu, marginBottom: 5,
-      }}>
-        <span>{met ? '✓ Quorum met' : 'Quorum'}</span>
-        <span className="mono">{toSTX(total)} / {toSTX(quorum)} STX</span>
+      <div className="mb-1.5 flex items-baseline justify-between">
+        <span className="tele font-bold">QUORUM</span>
+        <span className={`mono text-[0.7rem] font-bold uppercase ${reached ? 'text-ink' : 'text-hazard'}`}>
+          {reached ? '✓ REACHED' : `${p}% OF ${toSTX(quorum)}`}
+        </span>
       </div>
-      <div style={{ height: 3, background: T.s3, borderRadius: 2, overflow: 'hidden' }}>
-        <div style={{
-          width: `${p}%`, height: '100%',
-          background: met ? T.g : T.bdh,
-          transition: 'width .5s ease',
-        }} />
+      <div className="h-3 w-full border-2 border-ink bg-paper">
+        <div className={reached ? 'h-full bg-ink' : 'h-full hazard-stripe'} style={{ width: `${p}%` }} />
       </div>
     </div>
   );

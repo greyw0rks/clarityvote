@@ -1,69 +1,67 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
-import { T } from '@/lib/tokens';
-import { trunc, t2blocks } from '@/lib/utils';
-import { Badge } from './Badge';
+import type { Proposal, VoteChoice } from '@/lib/types';
+import { StateBadge } from './ui/badge';
 import { VoteBar } from './VoteBar';
 import { QuorumBar } from './QuorumBar';
-import type { Proposal } from '@/lib/types';
+import { trunc, t2blocks, unitId, choiceLabel, blockToDateTime } from '@/lib/utils';
 
-export function ProposalCard({ p }: { p: Proposal }) {
-  const [hov, setHov] = useState(false);
+export function ProposalCard({ p, myVote }: { p: Proposal; myVote?: VoteChoice }) {
+  // Stress-test seed proposals surface as recurring "daily votes" — label them
+  // by their opening date/time rather than their placeholder title/body.
+  const isStress = !p.title || /stress/i.test(p.title);
+  const tip = p.endBlock - p.blocksLeft;
+  const startedAt = blockToDateTime(p.startBlock - tip);
 
   return (
     <Link
       href={`/proposals/${p.id}`}
-      className="card"
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        display:     'block',
-        padding:     '20px 24px',
-        textDecoration: 'none',
-        borderColor: hov ? T.bdh : T.bdr,
-        background:  hov ? T.s2  : T.s1,
-        transform:   hov ? 'translateY(-2px)' : 'none',
-        boxShadow:   hov ? '0 8px 32px rgba(0,0,0,.4)' : 'none',
-        transition:  'all .15s',
-      }}
+      className="group flex flex-col border-2 border-ink bg-paper p-5 hover:bg-paper-2"
     >
-      {/* Title row */}
-      <div style={{
-        display: 'flex', justifyContent: 'space-between',
-        alignItems: 'flex-start', marginBottom: 8,
-      }}>
-        <h3 className="serif" style={{
-          fontSize: 17, fontWeight: 700, color: T.tx,
-          lineHeight: 1.3, flex: 1, marginRight: 16,
-        }}>
-          {p.title}
-        </h3>
-        <Badge state={p.state} />
+      <div className="flex items-start justify-between gap-3">
+        <span className="mono text-[0.7rem] font-bold tracking-widest text-ink-3">
+          {unitId('PROP', p.id)}
+        </span>
+        <StateBadge state={p.state} />
       </div>
 
-      {/* Meta */}
-      <p style={{ fontSize: 12, color: T.mu, marginBottom: 14 }}>
-        By {trunc(p.proposer)} ·{' '}
-        {p.finalized ? 'Finalized' : `${t2blocks(p.blocksLeft)} left · #${p.id}`}
-      </p>
+      <h3 className="macro mt-2 line-clamp-2 text-2xl leading-[0.9] group-hover:text-hazard">
+        {isStress ? 'DAILY VOTE' : p.title}
+      </h3>
 
-      {/* Description preview */}
-      <p style={{
-        fontSize: 13, color: T.mu, lineHeight: 1.55, marginBottom: 16,
-        display: '-webkit-box',
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical',
-        overflow: 'hidden',
-      } as React.CSSProperties}>
-        {p.description}
-      </p>
+      {isStress ? (
+        <p className="mt-2 mono text-[0.75rem] font-bold uppercase tracking-widest text-ink-2">
+          {startedAt}
+        </p>
+      ) : (
+        <p className="mt-2 line-clamp-2 text-sm text-ink-2">{p.description}</p>
+      )}
 
-      <VoteBar yes={p.yesVotes} no={p.noVotes} abstain={p.abstainVotes} total={p.totalPower} />
-      <div style={{ marginTop: 12 }}>
-        <QuorumBar total={p.totalPower} quorum={p.quorum} />
+      <div className="mt-4">
+        <VoteBar yes={p.yesVotes} no={p.noVotes} abstain={p.abstainVotes} />
       </div>
+
+      <div className="mt-3">
+        <QuorumBar totalPower={p.totalPower} quorum={p.quorum} />
+      </div>
+
+      <hr className="rule-thin my-4" />
+
+      <dl className="flex items-center justify-between mono text-[0.7rem] uppercase tracking-widest">
+        <div>
+          <dt className="text-ink-3">PROPOSER</dt>
+          <dd className="text-ink">{trunc(p.proposer, 6)}</dd>
+        </div>
+        <div className="text-right">
+          <dt className="text-ink-3">{p.state === 'active' ? 'CLOSES' : 'STATUS'}</dt>
+          <dd className="text-ink">{p.state === 'active' ? t2blocks(p.blocksLeft) : (p.finalized ? 'FINAL' : 'PENDING')}</dd>
+        </div>
+      </dl>
+
+      {myVote && (
+        <div className="mt-3 border-2 border-ink bg-ink px-2 py-1 text-center mono text-[0.65rem] font-bold uppercase tracking-widest text-paper">
+          ★ YOU VOTED {choiceLabel(myVote)}
+        </div>
+      )}
     </Link>
   );
 }

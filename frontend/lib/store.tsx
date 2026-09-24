@@ -4,10 +4,12 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useState,
   type ReactNode,
 } from 'react';
+import { toast } from 'sonner';
 import {
-  CONTRACT_ID, NETWORK_NAME, PAGE_SIZE,
-  buildCastVote, buildCreateProposal, buildFinalizeProposal,
+  CONTRACT_ID, NETWORK_NAME, PAGE_SIZE, decodeError, explorerUrl,
+  buildCastVote, buildCreateProposal, buildFinalizeProposal, buildCancelProposal,
   fetchProposalCount, fetchProposalPage, fetchVote,
+  type ContractCall,
 } from './contract';
 import type { Proposal, VoteChoice, CreateProposalInput } from './types';
 
@@ -18,9 +20,7 @@ import type { Proposal, VoteChoice, CreateProposalInput } from './types';
  */
 const wallet = () => import('@stacks/connect');
 
-type TxKind = 'vote' | 'create' | 'finalize';
-
-interface PendingTx { kind: TxKind; txid: string; proposalId?: number }
+interface PendingTx { label: string; txid: string }
 
 interface AppState {
   connected: boolean;
@@ -40,7 +40,10 @@ interface AppState {
   loadMore: () => Promise<void>;
   castVote: (proposalId: number, choice: VoteChoice) => Promise<void>;
   finalizeProposal: (proposalId: number) => Promise<void>;
+  cancelProposal: (proposalId: number) => Promise<void>;
   createProposal: (input: CreateProposalInput) => Promise<string | null>;
+  /** Generic contract-call submit, used by the delegation & timelock views. */
+  submit: (call: ContractCall, label: string) => Promise<string | null>;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -50,13 +53,6 @@ async function storedAddress(): Promise<string> {
   return getLocalStorage()?.addresses?.stx?.[0]?.address ?? '';
 }
 
-/**
- * Everything here reads from and writes to the deployed clarityvote contract.
- * Reads go through Hiro's read-only endpoint; writes are handed to the wallet,
- * which returns a txid. Chain state only changes once that transaction is mined,
- * so a write records a pending entry and re-reads rather than guessing the
- * outcome locally.
- */
 export function AppProvider({ children }: { children: ReactNode }) {
   const [connected, setConnected] = useState(false);
   const [address, setAddress] = useState('');
@@ -92,7 +88,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [loadVotes]);
 
-  /** Append the next page. The contract holds thousands of proposals. */
   const loadMore = useCallback(async () => {
     if (loading || proposals.length >= total) return;
     setLoading(true);
@@ -135,11 +130,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const addr = await storedAddress();
       setConnected(true);
       setAddress(addr);
+      toast.success('WALLET CONNECTED', { description: addr });
       await loadVotes(proposals, addr);
     } catch (e) {
-      // Closing the wallet popup rejects; that is a cancel, not a failure.
       const message = (e as Error).message ?? '';
-      if (!/cancel|reject|closed/i.test(message)) setError(message || 'Wallet connection failed');
+      // User dismissing the wallet picker is not an error worth surfacing.
+      if (/cancel|reject|closed/i.test(message)) return;
+      // A wallet extension that is installed but not set up (e.g. Talisman
+      // before onboarding) rejects here. Without a toast the click looks dead,
+      // because `error` is not rendered anywhere else in the UI.
+      const hint = /configured|onboard/i.test(message)
+        ? 'A wallet extension is installed but not set up. Finish its onboarding, disable it, or use Leather / Xverse.'
+        : message;
+      setError(hint || 'Wallet connection failed');
+      toast.error('WALLET CONNECTION FAILED', { description: hint || 'Could not open a wallet.' });
     }
   }, [loadVotes, proposals]);
 
@@ -150,46 +154,57 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setVotes({});
   }, []);
 
-  /** Hand a contract call to the wallet and record the txid it returns. */
-  const send = useCallback(async (
-    kind: TxKind,
-    call: { functionName: string; functionArgs: unknown[] },
-    proposalId?: number,
-  ): Promise<string | null> => {
+  /** Hand a contract call to the wallet, toast the result, record the txid. */
+  const submit = useCallback(async (call: ContractCall, label: string): Promise<string | null> => {
     setError(null);
     try {
       const { request } = await wallet();
       const res = await request('stx_callContract', {
-        contract: CONTRACT_ID as `${string}.${string}`,
+        contract: call.contractId as `${string}.${string}`,
         functionName: call.functionName,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         functionArgs: call.functionArgs as any,
         network: NETWORK_NAME as 'mainnet' | 'testnet',
       });
       const txid = res?.txid ?? null;
-      if (txid) setPending((p) => [...p, { kind, txid, proposalId }]);
+      if (txid) {
+        setPending((p) => [...p, { label, txid }]);
+        toast.success(`${label} SUBMITTED`, {
+          description: 'Broadcast to mempool',
+          action: { label: 'EXPLORER', onClick: () => window.open(explorerUrl(txid), '_blank') },
+        });
+      }
       return txid;
     } catch (e) {
       const message = (e as Error).message ?? '';
-      if (!/cancel|reject|closed/i.test(message)) setError(message || `${kind} failed`);
+      if (!/cancel|reject|closed/i.test(message)) {
+        const msg = decodeError(message) || `${label} failed`;
+        setError(msg);
+        toast.error(`${label} FAILED`, { description: msg });
+      }
       return null;
     }
   }, []);
 
   const castVote = useCallback(async (proposalId: number, choice: VoteChoice) => {
     if (votes[proposalId]) return;
-    await send('vote', buildCastVote(proposalId, choice), proposalId);
-  }, [send, votes]);
+    await submit(buildCastVote(proposalId, choice), 'VOTE');
+  }, [submit, votes]);
 
   const finalizeProposal = useCallback(async (proposalId: number) => {
-    await send('finalize', buildFinalizeProposal(proposalId), proposalId);
-  }, [send]);
+    await submit(buildFinalizeProposal(proposalId), 'FINALIZE');
+  }, [submit]);
+
+  const cancelProposal = useCallback(async (proposalId: number) => {
+    await submit(buildCancelProposal(proposalId), 'CANCEL');
+  }, [submit]);
 
   const createProposal = useCallback(async (input: CreateProposalInput) => {
-    return send('create', buildCreateProposal(
-      input.title, input.description, input.durationBlocks, input.quorum,
-    ));
-  }, [send]);
+    return submit(
+      buildCreateProposal(input.title, input.description, input.durationBlocks, input.quorum),
+      'CREATE PROPOSAL',
+    );
+  }, [submit]);
 
   // While a write is in flight, poll until the chain reflects it.
   useEffect(() => {
@@ -203,10 +218,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     total, hasMore: proposals.length < total,
     network: NETWORK_NAME, contractId: CONTRACT_ID,
     connect: doConnect, disconnect: doDisconnect, refresh, loadMore,
-    castVote, finalizeProposal, createProposal,
+    castVote, finalizeProposal, cancelProposal, createProposal, submit,
   }), [
     connected, address, proposals, votes, loading, error, pending, total,
-    doConnect, doDisconnect, refresh, loadMore, castVote, finalizeProposal, createProposal,
+    doConnect, doDisconnect, refresh, loadMore, castVote, finalizeProposal,
+    cancelProposal, createProposal, submit,
   ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

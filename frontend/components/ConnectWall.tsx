@@ -1,27 +1,17 @@
 'use client';
 
-import { T } from '@/lib/tokens';
-import { Btn } from './Btn';
+import { useApp } from '@/lib/store';
+import { Button } from './ui/button';
 
-export function ConnectWall({ onConnect }: { onConnect: () => void }) {
+export function ConnectWall({ message = 'CONNECT A STACKS WALLET TO CONTINUE' }: { message?: string }) {
+  const { connect } = useApp();
   return (
-    <div
-      className="card"
-      style={{
-        padding: '28px 24px',
-        textAlign: 'center',
-        borderColor: T.bdh,
-        background: 'linear-gradient(135deg, rgba(0,216,124,.04), rgba(0,0,0,0))',
-      }}
-    >
-      <div style={{ fontSize: 28, marginBottom: 12 }}>🔐</div>
-      <p className="serif" style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>
-        Connect your wallet to vote
+    <div className="border-2 border-ink bg-paper-2 p-8 text-center">
+      <div className="macro text-2xl">WALLET REQUIRED</div>
+      <p className="mx-auto mt-2 max-w-md mono text-[0.7rem] uppercase tracking-widest text-ink-3">
+        {message}
       </p>
-      <p style={{ fontSize: 13, color: T.mu, marginBottom: 20 }}>
-        Voting power equals your STX balance — no extra setup.
-      </p>
-      <Btn onClick={onConnect}>Connect Wallet</Btn>
+      <Button className="mt-5" onClick={connect}>CONNECT WALLET »</Button>
     </div>
   );
 }

@@ -1,30 +1,33 @@
 import type { Metadata } from 'next';
+import { Archivo, JetBrains_Mono } from 'next/font/google';
+import { Providers } from '@/components/Providers';
 import './globals.css';
-import { AppProvider } from '@/lib/store';
-import { Nav }         from '@/components/Nav';
-import { Footer }      from '@/components/Footer';
+
+const grotesk = Archivo({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-grotesk',
+  display: 'swap',
+});
+
+const jbmono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-jbmono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title:       'ClarityVote',
-  description: 'On-chain governance for Stacks communities',
-  icons:       { icon: '/Clarity.png' },
-  other: {
-        // Talent Protocol verification (update with your actual meta tag)
-        "talentapp:project_verification": "58af170fae777e79fc0e01e03c00bd9541433dfd37c89bdaeeed0f2bbe1974c08e482e302c2245a1ce19a272e5f03518dd0937be64631738bb6b17757896488b",
-      },
+  title: 'ClarityVote® — On-Chain Governance',
+  description: 'STX-weighted on-chain governance for Stacks communities. Create proposals, vote, delegate, and timelock execution.',
+  icons: { icon: '/Clarity.png' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <AppProvider>
-          <Nav />
-          <main style={{ flex: 1 }}>
-            {children}
-          </main>
-          <Footer />
-        </AppProvider>
+    <html lang="en" className={`${grotesk.variable} ${jbmono.variable}`}>
+      <body>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

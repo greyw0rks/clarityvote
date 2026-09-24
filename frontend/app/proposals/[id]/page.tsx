@@ -1,276 +1,208 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams, useRouter, notFound } from 'next/navigation';
-import { T } from '@/lib/tokens';
-import { pct, toSTX, trunc, t2blocks } from '@/lib/utils';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { useApp } from '@/lib/store';
-import { Badge } from '@/components/Badge';
-import { ConnectWall } from '@/components/ConnectWall';
-import { Btn } from '@/components/Btn';
-import type { VoteChoice } from '@/lib/types';
+import {
+  fetchProposal, fetchBlockHeight, fetchVote, fetchDelegationInfo,
+  explorerAddressUrl,
+} from '@/lib/contract';
+import type { Proposal, VoteChoice, VoteRecord, DelegationInfo } from '@/lib/types';
+import { VoteBar } from '@/components/VoteBar';
+import { QuorumBar } from '@/components/QuorumBar';
+import { StateBadge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { toSTXFull, trunc, t2blocks, unitId, choiceLabel } from '@/lib/utils';
 
-const CHOICE_LABEL: Record<VoteChoice, string> = { 1: 'Yes', 2: 'No', 3: 'Abstain' };
-const CHOICE_COLOR: Record<VoteChoice, string> = { 1: T.g,   2: T.red, 3: T.mu      };
+const CHOICES: { c: VoteChoice; label: string; cls: string }[] = [
+  { c: 1, label: 'YES', cls: 'border-ink bg-paper text-ink hover:bg-ink hover:text-paper' },
+  { c: 3, label: 'ABSTAIN', cls: 'border-ink bg-paper text-ink hover:bg-ink hover:text-paper' },
+  { c: 2, label: 'NO', cls: 'border-hazard bg-paper text-hazard hover:bg-hazard hover:text-paper' },
+];
 
-export default function ProposalDetailPage() {
-  const { id }  = useParams<{ id: string }>();
-  const router  = useRouter();
-  const { proposals, connected, address, connect, votes, castVote, finalizeProposal } = useApp();
+export default function ProposalDetail() {
+  const params = useParams();
+  const id = Number(params.id);
+  const { connected, address, pending, castVote, finalizeProposal, cancelProposal } = useApp();
 
-  const [busy, setBusy] = useState(false);
+  const [p, setP] = useState<Proposal | null>(null);
+  const [tip, setTip] = useState(0);
+  const [myVote, setMyVote] = useState<VoteRecord | null>(null);
+  const [del, setDel] = useState<DelegationInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState<VoteChoice | 'finalize' | 'cancel' | null>(null);
 
-  const p = proposals.find(x => x.id === Number(id));
-  if (!p) return notFound();
+  const load = useCallback(async () => {
+    const t = await fetchBlockHeight().catch(() => 0);
+    setTip(t);
+    const prop = await fetchProposal(id, t).catch(() => null);
+    setP(prop);
+    if (address) {
+      fetchVote(id, address).then(setMyVote).catch(() => setMyVote(null));
+      fetchDelegationInfo(address).then(setDel).catch(() => setDel(null));
+    }
+    setLoading(false);
+  }, [id, address]);
 
-  const myVote     = votes[p.id] as VoteChoice | undefined;
-  const canVote    = connected && p.state === 'active' && !p.finalized && !myVote;
-  const canFinalize = p.state === 'active' && !p.finalized && p.blocksLeft <= 0;
+  useEffect(() => { load(); }, [load]);
+  // Re-read when a pending tx resolves.
+  useEffect(() => { if (pending.length) load(); }, [pending.length, load]);
 
-  const yp = pct(p.yesVotes,     p.totalPower);
-  const np = pct(p.noVotes,      p.totalPower);
-  const ap = pct(p.abstainVotes, p.totalPower);
-  const qp = p.quorum === 0n ? 100 : Math.min(pct(p.totalPower, p.quorum), 100);
+  async function vote(c: VoteChoice) {
+    setBusy(c);
+    await castVote(id, c);
+    setBusy(null);
+    setTimeout(load, 1500);
+  }
+  async function doFinalize() { setBusy('finalize'); await finalizeProposal(id); setBusy(null); setTimeout(load, 1500); }
+  async function doCancel() { setBusy('cancel'); await cancelProposal(id); setBusy(null); setTimeout(load, 1500); }
 
-  const handleVote = async (choice: VoteChoice) => {
-    if (!canVote || busy) return;
-    setBusy(true);
-    await new Promise(r => setTimeout(r, 600));
-    castVote(p.id, choice);
-    setBusy(false);
-  };
+  if (loading) {
+    return <div className="px-6 py-24 text-center macro text-3xl md:px-10"><span className="blink">READING CHAIN…</span></div>;
+  }
+  if (!p) {
+    return (
+      <div className="px-6 py-24 text-center md:px-10">
+        <div className="macro text-4xl">UNIT NOT FOUND</div>
+        <p className="mt-2 mono text-[0.7rem] uppercase tracking-widest text-ink-3">{unitId('PROP', id)} DOES NOT EXIST ON CHAIN</p>
+        <Link href="/proposals"><Button className="mt-5" variant="outline">« BACK TO REGISTRY</Button></Link>
+      </div>
+    );
+  }
 
-  const handleFinalize = async () => {
-    if (busy) return;
-    setBusy(true);
-    await new Promise(r => setTimeout(r, 800));
-    finalizeProposal(p.id);
-    setBusy(false);
-  };
+  const windowOpen = tip < p.endBlock && !p.finalized;
+  const canFinalize = tip >= p.endBlock && !p.finalized;
+  const canCancel = connected && address === p.proposer && tip < p.startBlock && p.state === 'active';
+  const alreadyVoted = !!myVote;
 
   return (
-    <div className="fade" style={{ maxWidth: 800, margin: '0 auto', padding: '40px 28px 80px' }}>
+    <div className="px-6 py-10 md:px-10">
+      <Link href="/proposals" className="mono text-[0.7rem] font-bold uppercase tracking-widest text-ink-3 hover:text-hazard">
+        « REGISTRY
+      </Link>
 
-      {/* Back */}
-      <button
-        onClick={() => router.push('/proposals')}
-        style={{
-          background: 'none', border: 'none', color: T.mu,
-          fontSize: 13, fontFamily: T.font,
-          cursor: 'pointer', marginBottom: 28,
-          display: 'flex', alignItems: 'center', gap: 6,
-        }}
-      >
-        ← Proposals
-      </button>
-
-      {/* ── Header ───────────────────────────────────────── */}
-      <div style={{ marginBottom: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <Badge state={p.state} />
-          {!p.finalized && p.blocksLeft > 0 && (
-            <span style={{ fontSize: 12, color: T.mu }}>Closes in {t2blocks(p.blocksLeft)}</span>
-          )}
-          {p.finalized && (
-            <span style={{ fontSize: 12, color: T.mu }}>Finalized</span>
-          )}
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <div className="max-w-3xl">
+          <div className="tele mb-2">{unitId('PROP', p.id)} / PROPOSER {trunc(p.proposer, 6)}</div>
+          <h1 className="macro text-4xl md:text-6xl">{p.title || 'UNTITLED'}</h1>
         </div>
-
-        <h1 style={{
-          fontSize: 'clamp(1.6rem, 4vw, 2.2rem)',
-          fontWeight: 800, lineHeight: 1.15, marginBottom: 14,
-        }}>
-          {p.title}
-        </h1>
-
-        <p style={{ fontSize: 13, color: T.mu, marginBottom: 20 }}>
-          Proposed by{' '}
-          <span className="mono" style={{ color: T.tx, fontSize: 12 }}>{p.proposer}</span>
-          {' '}· Blocks #{p.startBlock} → #{p.endBlock}
-        </p>
-
-        <p style={{ fontSize: 15, color: T.mu, lineHeight: 1.8 }}>{p.description}</p>
+        <StateBadge state={p.state} className="text-sm" />
       </div>
 
-      {/* ── Results ──────────────────────────────────────── */}
-      <div className="card" style={{ padding: '24px', marginBottom: 16 }}>
-        <h3 style={{
-          fontSize: 14, fontWeight: 600, color: T.mu,
-          letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 20,
-        }}>
-          Results
-        </h3>
+      <hr className="rule my-6" />
 
-        {([
-          { label: 'Yes',     val: p.yesVotes,     c: T.g,   p: yp },
-          { label: 'No',      val: p.noVotes,      c: T.red, p: np },
-          { label: 'Abstain', val: p.abstainVotes, c: T.mu,  p: ap },
-        ] as const).map(row => (
-          <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
-            <span style={{ width: 56, fontSize: 13, fontWeight: 700, color: row.c }}>{row.label}</span>
-            <div style={{ flex: 1, height: 8, background: T.s3, borderRadius: 4, overflow: 'hidden' }}>
-              <div style={{ width: `${row.p}%`, height: '100%', background: row.c, transition: 'width .6s ease' }} />
-            </div>
-            <span style={{ width: 36, textAlign: 'right', fontSize: 13, fontWeight: 700, color: row.c }}>
-              {row.p}%
-            </span>
-            <span className="mono" style={{ width: 80, textAlign: 'right', fontSize: 12, color: T.mu }}>
-              {toSTX(row.val)} STX
-            </span>
-          </div>
-        ))}
-
-        {/* Quorum */}
-        <div style={{ borderTop: `1px solid ${T.bdr}`, paddingTop: 16, marginTop: 4 }}>
-          <div style={{
-            display: 'flex', justifyContent: 'space-between',
-            fontSize: 13, color: T.mu, marginBottom: 6,
-          }}>
-            <span>
-              Quorum{p.totalPower >= p.quorum ? ' ✓ met' : ` · ${toSTX(p.quorum)} STX needed`}
-            </span>
-            <span className="mono">{toSTX(p.totalPower)} / {toSTX(p.quorum)} STX</span>
-          </div>
-          <div style={{ height: 4, background: T.s3, borderRadius: 2, overflow: 'hidden' }}>
-            <div style={{
-              width: `${qp}%`, height: '100%',
-              background: p.totalPower >= p.quorum ? T.g : T.bdh,
-              transition: 'width .6s ease',
-            }} />
-          </div>
-        </div>
-      </div>
-
-      {/* ── My vote display ──────────────────────────────── */}
-      {myVote && (
-        <div className="card" style={{
-          padding: '16px 20px', marginBottom: 16,
-          background: 'rgba(0,216,124,.06)', borderColor: T.bdh,
-          display: 'flex', alignItems: 'center', gap: 12,
-        }}>
-          <span style={{ fontSize: 20 }}>✓</span>
+      <div className="grid gap-px bg-ink lg:grid-cols-[1.5fr_1fr]">
+        {/* LEFT: body + tally */}
+        <div className="space-y-6 bg-paper p-6">
           <div>
-            <span style={{ fontSize: 13, color: T.mu }}>Your vote · </span>
-            <span style={{ fontSize: 15, fontWeight: 700, color: CHOICE_COLOR[myVote] }}>
-              {CHOICE_LABEL[myVote]}
-            </span>
+            <div className="tele mb-2">[ DESCRIPTION ]</div>
+            <p className="whitespace-pre-wrap text-base leading-relaxed text-ink-2">
+              {p.description || 'No description provided.'}
+            </p>
           </div>
-          <span className="mono" style={{ marginLeft: 'auto', fontSize: 12, color: T.mu }}>
-            100K STX power
-          </span>
+
+          <div>
+            <div className="tele mb-2">[ TALLY ]</div>
+            <VoteBar yes={p.yesVotes} no={p.noVotes} abstain={p.abstainVotes} />
+          </div>
+
+          <QuorumBar totalPower={p.totalPower} quorum={p.quorum} />
         </div>
-      )}
 
-      {/* ── Vote actions ─────────────────────────────────── */}
-      {p.state === 'active' && !p.finalized && (
-        <div className="card" style={{ padding: '24px', marginBottom: 16 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Cast your vote</h3>
-          <p style={{ fontSize: 13, color: T.mu, marginBottom: 18 }}>
-            Voting power = your STX balance at time of vote
-          </p>
+        {/* RIGHT: actions + metadata */}
+        <div className="space-y-6 bg-paper p-6">
+          {/* CAST VOTE */}
+          <div>
+            <div className="tele mb-2">[ CAST BALLOT ]</div>
+            {!connected ? (
+              <p className="border-2 border-ink bg-paper-2 p-4 mono text-[0.7rem] uppercase tracking-widest text-ink-3">
+                CONNECT WALLET TO VOTE
+              </p>
+            ) : alreadyVoted ? (
+              <div className="border-2 border-ink bg-ink p-4 text-center text-paper">
+                <div className="mono text-[0.65rem] uppercase tracking-widest opacity-70">YOU VOTED</div>
+                <div className="macro mt-1 text-3xl">{choiceLabel(myVote!.choice)}</div>
+                <div className="mono mt-1 text-[0.7rem] uppercase tracking-widest opacity-70">
+                  {toSTXFull(myVote!.votingPower)} STX
+                </div>
+              </div>
+            ) : windowOpen ? (
+              <div className="grid grid-cols-3 gap-2">
+                {CHOICES.map((ch) => (
+                  <button
+                    key={ch.c}
+                    disabled={busy !== null}
+                    onClick={() => vote(ch.c)}
+                    className={`border-2 py-4 font-display text-sm font-black uppercase tracking-tight disabled:opacity-40 ${ch.cls}`}
+                  >
+                    {busy === ch.c ? '···' : ch.label}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="border-2 border-ink bg-paper-2 p-4 mono text-[0.7rem] uppercase tracking-widest text-ink-3">
+                VOTING WINDOW CLOSED
+              </p>
+            )}
 
-          {!connected ? (
-            <ConnectWall onConnect={connect} />
-          ) : myVote ? (
-            <p style={{ fontSize: 13, color: T.mu }}>You&apos;ve already voted on this proposal.</p>
-          ) : (
-            <div style={{ display: 'flex', gap: 10 }}>
-              {([
-                ['Yes',     1 as VoteChoice, T.g  ],
-                ['No',      2 as VoteChoice, T.red ],
-                ['Abstain', 3 as VoteChoice, T.mu  ],
-              ] as const).map(([label, choice, color]) => (
-                <VoteButton
-                  key={choice}
-                  label={label}
-                  color={color}
-                  disabled={busy}
-                  onClick={() => handleVote(choice)}
-                />
-              ))}
+            {connected && del && windowOpen && !alreadyVoted && (
+              <p className="mt-2 mono text-[0.65rem] uppercase tracking-widest text-ink-3">
+                » EFFECTIVE WEIGHT {toSTXFull(del.effectiveWeight)} STX
+                {del.delegatedWeight > 0n && ` (INCL. ${toSTXFull(del.delegatedWeight)} DELEGATED)`}
+              </p>
+            )}
+          </div>
+
+          {/* FINALIZE / CANCEL */}
+          {(canFinalize || canCancel) && (
+            <div className="space-y-2">
+              {canFinalize && (
+                <Button className="w-full" disabled={busy !== null} onClick={doFinalize}>
+                  {busy === 'finalize' ? 'AWAITING WALLET…' : 'FINALIZE OUTCOME »'}
+                </Button>
+              )}
+              {canCancel && (
+                <Button className="w-full" variant="hazard" disabled={busy !== null} onClick={doCancel}>
+                  {busy === 'cancel' ? 'AWAITING WALLET…' : 'CANCEL PROPOSAL ✕'}
+                </Button>
+              )}
             </div>
           )}
-        </div>
-      )}
 
-      {/* ── Finalize ─────────────────────────────────────── */}
-      {canFinalize && (
-        <div className="card" style={{
-          padding: '20px 24px', marginBottom: 16,
-          textAlign: 'center', borderColor: T.bdh,
-        }}>
-          <p style={{ fontSize: 14, color: T.mu, marginBottom: 14 }}>
-            Voting window has closed. Anyone can finalize this proposal to record the result on-chain.
-          </p>
-          <Btn onClick={handleFinalize} disabled={busy}>
-            {busy ? 'Finalizing…' : 'Finalize Proposal'}
-          </Btn>
-        </div>
-      )}
-
-      {/* ── On-chain metadata ────────────────────────────── */}
-      <div className="card" style={{ padding: '20px 24px' }}>
-        <h3 style={{
-          fontSize: 13, color: T.mu, letterSpacing: '.06em',
-          textTransform: 'uppercase', fontWeight: 600, marginBottom: 16,
-        }}>
-          On-chain Info
-        </h3>
-        {([
-          ['Contract',    'clarityvote.clar'                                             ],
-          ['Proposal ID', `#${p.id}`                                                     ],
-          ['Start Block', `#${p.startBlock}`                                             ],
-          ['End Block',   `#${p.endBlock}`                                               ],
-          ['Duration',    `${p.endBlock - p.startBlock} blocks (~${t2blocks(p.endBlock - p.startBlock)})`],
-          ['Quorum',      `${toSTX(p.quorum)} STX`                                      ],
-          ['State',       p.state.charAt(0).toUpperCase() + p.state.slice(1)            ],
-        ] as const).map(([k, v]) => (
-          <div key={k} style={{
-            display: 'flex', justifyContent: 'space-between',
-            padding: '8px 0', borderBottom: `1px solid ${T.bdr}`, fontSize: 13,
-          }}>
-            <span style={{ color: T.mu }}>{k}</span>
-            <span className="mono" style={{ color: T.tx, fontSize: 12 }}>{v}</span>
+          {/* METADATA */}
+          <div>
+            <div className="tele mb-2">[ ON-CHAIN METADATA ]</div>
+            <dl className="gridlines grid-cols-2 text-xs">
+              <Meta k="STATE" v={p.state.toUpperCase()} />
+              <Meta k="FINALIZED" v={p.finalized ? 'YES' : 'NO'} />
+              <Meta k="START BLOCK" v={String(p.startBlock)} />
+              <Meta k="END BLOCK" v={String(p.endBlock)} />
+              <Meta k="CHAIN TIP" v={String(tip)} />
+              <Meta k={windowOpen ? 'CLOSES IN' : 'WINDOW'} v={windowOpen ? t2blocks(p.blocksLeft) : 'CLOSED'} />
+              <Meta k="QUORUM" v={`${toSTXFull(p.quorum)}`} />
+              <Meta k="TURNOUT" v={`${toSTXFull(p.totalPower)}`} />
+            </dl>
+            <a
+              href={explorerAddressUrl(p.proposer)}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-block mono text-[0.7rem] uppercase tracking-widest underline decoration-hazard decoration-2 underline-offset-2"
+            >
+              PROPOSER » {trunc(p.proposer, 8)}
+            </a>
           </div>
-        ))}
+        </div>
       </div>
-
     </div>
   );
 }
 
-/* ── Inline VoteButton to avoid prop-drilling color hover logic ── */
-function VoteButton({
-  label, color, disabled, onClick,
-}: {
-  label:    string;
-  color:    string;
-  disabled: boolean;
-  onClick:  () => void;
-}) {
-  const [hov, setHov] = useState(false);
+function Meta({ k, v }: { k: string; v: string }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        flex:         1,
-        padding:      '12px 10px',
-        background:   hov ? `${color}11` : 'transparent',
-        border:       `1px solid ${hov ? color : T.bdr}`,
-        borderRadius: 8,
-        cursor:       disabled ? 'wait' : 'pointer',
-        color:        hov ? color : T.mu,
-        fontWeight:   700,
-        fontSize:     15,
-        fontFamily:   T.font,
-        opacity:      disabled ? 0.5 : 1,
-        transition:   'all .15s',
-      }}
-    >
-      {label}
-    </button>
+    <div className="bg-paper px-3 py-2">
+      <dt className="mono text-[0.6rem] uppercase tracking-widest text-ink-3">{k}</dt>
+      <dd className="mono mt-0.5 text-sm font-bold text-ink">{v}</dd>
+    </div>
   );
 }

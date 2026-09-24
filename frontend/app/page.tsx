@@ -1,95 +1,79 @@
+'use client';
+
 import Link from 'next/link';
-import { T } from '@/lib/tokens';
+import { useApp } from '@/lib/store';
+import { Button } from '@/components/ui/button';
+import { Stat } from '@/components/Stat';
+import { ProposalCard } from '@/components/ProposalCard';
 
-export default function HomePage() {
+export default function Home() {
+  const { total, proposals, votes, loading, connected, connect } = useApp();
+  const active = proposals.filter((p) => p.state === 'active');
+  const featured = (active.length ? active : proposals).slice(0, 3);
+
   return (
-    <div style={{ maxWidth: 780, margin: '0 auto', padding: '80px 28px 64px', textAlign: 'center' }}>
-
-      {/* Badge */}
-      <div style={{
-        display: 'inline-flex', alignItems: 'center', gap: 6,
-        background: 'rgba(0,216,124,.1)', border: `1px solid rgba(0,216,124,.25)`,
-        borderRadius: 20, padding: '4px 14px', fontSize: 12,
-        fontWeight: 600, color: T.g, letterSpacing: '.04em', marginBottom: 28,
-      }}>
-        <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.g, display: 'inline-block' }} />
-        Live on Stacks
-      </div>
-
-      {/* Headline */}
-      <h1 style={{
-        fontSize: 'clamp(2rem, 6vw, 3.2rem)', fontWeight: 800,
-        lineHeight: 1.1, marginBottom: 20,
-      }}>
-        On-chain governance<br />
-        for <span style={{ color: T.g }}>Stacks</span> communities
-      </h1>
-
-      <p style={{
-        fontSize: 16, color: T.mu, lineHeight: 1.7,
-        maxWidth: 520, margin: '0 auto 36px',
-      }}>
-        Create proposals, cast votes with your STX balance, and finalize results
-        on-chain. Transparent. Permissionless. Unstoppable.
-      </p>
-
-      {/* CTAs */}
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 64 }}>
-        <Link href="/proposals">
-          <button style={{
-            background: T.g, color: '#041a10', border: 'none',
-            padding: '13px 28px', borderRadius: 8, fontSize: 15,
-            fontWeight: 700, cursor: 'pointer', fontFamily: T.font,
-          }}>
-            View proposals →
-          </button>
-        </Link>
-        <Link href="/proposals/new">
-          <button style={{
-            background: 'transparent', color: T.mu,
-            border: `1px solid ${T.bdr}`, padding: '13px 24px',
-            borderRadius: 8, fontSize: 15, fontWeight: 500,
-            cursor: 'pointer', fontFamily: T.font,
-          }}>
-            New proposal
-          </button>
-        </Link>
-      </div>
-
-      {/* Stats */}
-      <div style={{
-        display: 'flex', justifyContent: 'center', gap: 40,
-        flexWrap: 'wrap', padding: '28px 0',
-        borderTop: `1px solid ${T.bdr}`, borderBottom: `1px solid ${T.bdr}`,
-        marginBottom: 64,
-      }}>
-        {[
-          ['100%', 'On-chain'],
-          ['STX', 'Voting power'],
-          ['Open', 'Permissionless'],
-          ['Clarity', 'Smart contract'],
-        ].map(([val, label]) => (
-          <div key={label}>
-            <div style={{ fontSize: 22, fontWeight: 800 }}>{val}</div>
-            <div style={{ fontSize: 12, color: T.mu, marginTop: 2 }}>{label}</div>
+    <div>
+      {/* HERO */}
+      <section className="border-b-2 border-ink">
+        <div className="hazard-stripe h-4" />
+        <div className="grid gap-px bg-ink lg:grid-cols-[1.6fr_1fr]">
+          <div className="bg-paper px-6 py-14 md:px-10 md:py-20">
+            <div className="tele mb-4">[ DECENTRALIZED GOVERNANCE UNIT / STACKS MAINNET ]</div>
+            <h1 className="macro text-[clamp(3.5rem,11vw,10rem)]">
+              GOVERN<br />ON-<span className="text-hazard">CHAIN</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-snug text-ink-2">
+              Proposals, votes, and outcomes recorded directly on the Stacks blockchain.
+              Voting power is your live STX balance. No custody. No backroom tallies.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/proposals"><Button size="lg">VIEW PROPOSALS »</Button></Link>
+              {connected
+                ? <Link href="/proposals/new"><Button size="lg" variant="outline">NEW PROPOSAL +</Button></Link>
+                : <Button size="lg" variant="outline" onClick={connect}>CONNECT WALLET</Button>}
+            </div>
           </div>
-        ))}
-      </div>
 
-      {/* Features */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, textAlign: 'left' }}>
-        {[
-          ['STX-weighted votes', 'Voting power equals your live STX balance. No snapshots, no delegation.'],
-          ['Permissionless', 'Anyone can create a proposal or cast a vote. No whitelist, no gatekeepers.'],
-          ['On-chain finalization', 'Once voting closes, anyone can finalize and record the result in Clarity.'],
-        ].map(([title, desc]) => (
-          <div key={title} className="card" style={{ padding: '20px' }}>
-            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{title}</div>
-            <div style={{ fontSize: 13, color: T.mu, lineHeight: 1.6 }}>{desc}</div>
+          <div className="grid grid-rows-3 gap-px bg-ink">
+            <Stat label="TOTAL PROPOSALS" value={loading ? '····' : total} accent />
+            <Stat label="LIVE NOW" value={loading ? '··' : active.length} sub="OPEN FOR VOTING" />
+            <Stat label="YOUR BALLOTS" value={Object.keys(votes).length} sub={connected ? 'VOTES CAST' : 'CONNECT TO TRACK'} />
           </div>
-        ))}
-      </div>
+        </div>
+      </section>
 
+      {/* PROTOCOL */}
+      <section className="border-b-2 border-ink px-6 py-12 md:px-10">
+        <div className="tele mb-6">[ PROTOCOL / 03 STEPS ]</div>
+        <div className="gridlines md:grid-cols-3">
+          {[
+            { n: '01', t: 'PROPOSE', d: 'Anyone can open a proposal with a voting window and a quorum threshold. It is written straight to the contract.' },
+            { n: '02', t: 'VOTE', d: 'STX holders cast YES / NO / ABSTAIN. Weight equals your live STX balance plus any delegated to you.' },
+            { n: '03', t: 'FINALIZE', d: 'After the window closes anyone can finalize. Outcome is computed on-chain from quorum and the tally.' },
+          ].map((s) => (
+            <div key={s.n} className="p-6">
+              <div className="macro text-6xl text-hazard">{s.n}</div>
+              <div className="macro mt-3 text-2xl">{s.t}</div>
+              <p className="mt-2 text-sm text-ink-2">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURED */}
+      {featured.length > 0 && (
+        <section className="px-6 py-12 md:px-10">
+          <div className="mb-6 flex items-end justify-between">
+            <h2 className="macro text-3xl">FEATURED</h2>
+            <Link href="/proposals" className="mono text-[0.7rem] font-bold uppercase tracking-widest underline decoration-hazard decoration-2 underline-offset-4">
+              ALL PROPOSALS »
+            </Link>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featured.map((p) => <ProposalCard key={p.id} p={p} myVote={votes[p.id]} />)}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

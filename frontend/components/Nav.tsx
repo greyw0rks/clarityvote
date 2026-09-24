@@ -2,124 +2,68 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { T } from '@/lib/tokens';
-import { trunc } from '@/lib/utils';
 import { useApp } from '@/lib/store';
+import { APP_NAME } from '@/lib/config';
+import { trunc } from '@/lib/utils';
+import { cn } from '@/lib/cn';
+import { Button } from './ui/button';
 
-const LINKS: [string, string][] = [
-  ['/',              'Home'      ],
-  ['/proposals',     'Proposals' ],
-  ['/proposals/new', '+ Propose' ],
+const LINKS = [
+  { href: '/proposals', label: 'PROPOSALS' },
+  { href: '/delegation', label: 'DELEGATION' },
+  { href: '/timelock', label: 'TIMELOCK' },
 ];
 
 export function Nav() {
-  const { connected, address, connect, disconnect } = useApp();
+  const { connected, address, network, connect, disconnect } = useApp();
   const pathname = usePathname();
 
   return (
-    <nav style={{
-      display:         'flex',
-      alignItems:      'center',
-      justifyContent:  'space-between',
-      padding:         '12px 28px',
-      background:      T.s1,
-      borderBottom:    `1px solid ${T.bdr}`,
-      position:        'sticky',
-      top:             0,
-      zIndex:          100,
-    }}>
-      {/* Brand */}
-      <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{
-          width: 28, height: 28, background: T.g, borderRadius: 6,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <span style={{
-            color: T.bg, fontWeight: 800, fontSize: 13,
-            fontFamily: T.mono,
-          }}>V</span>
-        </div>
-        <span className="serif" style={{ fontSize: 16, fontWeight: 700, color: T.tx }}>
-          ClarityVote
-        </span>
-      </Link>
+    <header className="sticky top-0 z-50 border-b-2 border-ink bg-paper">
+      <div className="mx-auto flex h-16 max-w-[1400px] items-stretch">
+        <Link
+          href="/"
+          className="flex items-center gap-2 border-r-2 border-ink px-5 macro text-xl hover:bg-ink hover:text-paper"
+        >
+          {APP_NAME}<span className="text-hazard">®</span>
+        </Link>
 
-      {/* Links + wallet */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        {LINKS.map(([href, label]) => {
-          const active = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              style={{
-                padding:    '5px 13px',
-                borderRadius: 6,
-                background: active ? T.s3 : 'transparent',
-                border:     `1px solid ${active ? T.bdh : 'transparent'}`,
-                color:      active ? T.tx  : T.mu,
-                fontSize:   13,
-                fontWeight: 500,
-                fontFamily: T.font,
-              }}
-            >
-              {label}
-            </Link>
-          );
-        })}
+        <nav className="flex items-stretch">
+          {LINKS.map((l) => {
+            const active = pathname.startsWith(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={cn(
+                  'flex items-center border-r-2 border-ink px-4 font-mono text-[0.7rem] font-bold uppercase tracking-widest',
+                  active ? 'bg-ink text-paper' : 'text-ink hover:bg-paper-2',
+                )}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-        {connected ? (
-          <>
-            <span
-              className="mono"
-              style={{
-                padding:      '4px 12px',
-                background:   T.s2,
-                border:       `1px solid ${T.bdr}`,
-                borderRadius: 20,
-                fontSize:     11,
-                color:        T.mu,
-                marginLeft:   4,
-              }}
-            >
-              {trunc(address, 10)}
-            </span>
+        <div className="ml-auto flex items-center gap-3 px-4">
+          <span className="hidden items-center gap-1.5 border-2 border-ink px-2 py-1 font-mono text-[0.65rem] font-bold uppercase tracking-widest sm:inline-flex">
+            <span className={cn('h-2 w-2', network === 'mainnet' ? 'bg-hazard' : 'bg-ink', 'blink')} />
+            {network}
+          </span>
+          {connected ? (
             <button
               onClick={disconnect}
-              style={{
-                padding:    '5px 12px',
-                background: 'transparent',
-                border:     `1px solid ${T.bdr}`,
-                borderRadius: 6,
-                color:      T.mu,
-                fontSize:   13,
-                fontFamily: T.font,
-                cursor:     'pointer',
-              }}
+              className="border-2 border-ink bg-paper px-3 py-1.5 font-mono text-[0.7rem] font-bold uppercase tracking-widest hover:bg-hazard hover:border-hazard hover:text-paper"
+              title="Disconnect"
             >
-              ↩
+              {trunc(address, 5)}
             </button>
-          </>
-        ) : (
-          <button
-            onClick={connect}
-            style={{
-              padding:      '7px 18px',
-              background:   T.g,
-              border:       'none',
-              borderRadius: 7,
-              color:        T.bg,
-              fontSize:     13,
-              fontWeight:   700,
-              fontFamily:   T.font,
-              cursor:       'pointer',
-              marginLeft:   4,
-            }}
-          >
-            Connect Wallet
-          </button>
-        )}
+          ) : (
+            <Button size="sm" onClick={connect}>CONNECT</Button>
+          )}
+        </div>
       </div>
-    </nav>
+    </header>
   );
 }
